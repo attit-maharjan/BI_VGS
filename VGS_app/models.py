@@ -34,7 +34,7 @@ class TeacherDetails(models.Model):
     qualification = models.CharField(max_length=100)
     hire_date = models.DateField()
 
-# Parent-Student Relation (Ensuring only Parents can be linked)
+# Parent-Student Relation 
 class ParentStudent(models.Model):
     parent = models.ForeignKey(
         Person, 
@@ -62,7 +62,7 @@ class AcademicYear(models.Model):
 class Class(models.Model):
     class_name = models.CharField(max_length=50, unique=True)
 
-# Subject (Now includes is_active field)
+# Subject (e.g., Math, Science, History)
 class Subject(models.Model):
     subject_name = models.CharField(max_length=50, unique=True)
     is_active = models.BooleanField(default=True)  
