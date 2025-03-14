@@ -3,7 +3,6 @@ from . import views  # Import views from your app
 
 urlpatterns = [
     path('vgs', views.index, name='index'),  # Index page
-    path('vsghome/', views.home, name='home'),  # Home page
     path('home_view/', views.home_view, name='home_view'),  # Another home view (simple HttpResponse)
     path('person_list/', views.person_list, name='person_list'),  # List of persons
     path('add_person/', views.add_person, name='add_person'),  # Add a new person
