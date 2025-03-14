@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+  <h2>Bulk Upload Data</h2>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload File</button>
+  </form>
+
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+      <li class="{% if 'error' in message.tags %}message-error{% elif 'success' in message.tags %}message-success{% elif 'warning' in message.tags %}message-warning{% else %}message-default{% endif %}">
+        {{ message }}
+      </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+{% endblock %}
