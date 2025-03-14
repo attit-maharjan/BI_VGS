@@ -1,0 +1,22 @@
+{% extends 'VGS_app/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Login to BI VGS</h2>
+
+    <form method="post" class="w-50 mx-auto p-4 border rounded shadow">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_username" class="form-label">Username:</label>
+            <input type="text" name="username" class="form-control" required id="id_username">
+        </div>
+
+        <div class="mb-3">
+            <label for="id_password" class="form-label">Password:</label>
+            <input type="password" name="password" class="form-control" required id="id_password">
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+</div>
+{% endblock %}
