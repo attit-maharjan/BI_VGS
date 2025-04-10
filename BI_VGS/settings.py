@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'office',
+    'school',
 
-    'VGS_app', "student",
+    
 ]
 
 

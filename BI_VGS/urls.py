@@ -20,7 +20,6 @@ from office import views as office_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('VGS_app/', include('VGS_app.urls')),   
-    path('office/', include('office.urls')), 
+    
 ]
 
