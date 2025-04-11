@@ -22,6 +22,9 @@
         <!-- Add admin-specific content here -->
     {% endif %}
 
-    <a href="{% url 'logout' %}">Logout</a>
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
 </body>
 </html>
