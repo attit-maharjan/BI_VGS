@@ -2,6 +2,8 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.models import User
 
 class Address(models.Model):
     street_address = models.CharField(max_length=255)
@@ -34,6 +36,7 @@ class Person(models.Model):
     phone_number = models.CharField(max_length=15)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
     date_joined = models.DateField(auto_now_add=True)
+    password = models.CharField(max_length=128, default='django123')
     
     class Role(models.TextChoices):
         STUDENT = 'STUDENT', 'Student'
@@ -46,6 +49,18 @@ class Person(models.Model):
     class Meta:
         ordering = ['last_name', 'first_name']
     
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+        self.save()
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Only for new instances
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.role})"
 
@@ -239,3 +254,14 @@ def create_role_instance(sender, instance, created, **kwargs):
             Parent.objects.create(person=instance, is_active=False)
         elif instance.role == Person.Role.STAFF:
             Staff.objects.create(person=instance, is_active=False)
+
+@receiver(post_save, sender=Person)
+def create_user_for_person(sender, instance, created, **kwargs):
+    if created:
+        User.objects.create_user(
+            username=instance.email,
+            email=instance.email,
+            password='django123',  # Using default password
+            first_name=instance.first_name,
+            last_name=instance.last_name
+        )
