@@ -1,0 +1,189 @@
+{% extends 'main_app/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+{% block content %}
+<section class="content">
+    <div class="container-fluid">
+        <!-- Stats Row -->
+        <div class="row">
+            <!-- Existing Stats -->
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{total_users}}</h3>
+                        <p>Total Users</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-stalker"></i>
+                    </div>
+                    <a href="{% url 'manage_users' %}" class="small-box-footer">Manage Users <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-secondary">
+                    <div class="inner">
+                        <h3>{{pending_incidents}}</h3>
+                        <p>Pending Incidents</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-alert"></i>
+                    </div>
+                    <a href="{% url 'incident_management' %}" class="small-box-footer">Manage Incidents <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{compliance_status}}</h3>
+                        <p>Compliance Status</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-checkmark"></i>
+                    </div>
+                    <a href="{% url 'compliance_reports' %}" class="small-box-footer">View Reports <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{budget_usage}}</h3>
+                        <p>Budget Usage</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-cash"></i>
+                    </div>
+                    <a href="{% url 'financial_dashboard' %}" class="small-box-footer">Financial Overview <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Row -->
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-md-8">
+                <!-- Audit Logs Card -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Activity Logs</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in audit_logs %}
+                                <tr>
+                                    <td>{{ log.timestamp }}</td>
+                                    <td>{{ log.user }}</td>
+                                    <td>{{ log.action_type }}</td>
+                                    <td>{{ log.details }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- System Settings Quick Actions -->
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">System Configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <a href="{% url 'manage_roles' %}" class="btn btn-block btn-outline-dark mb-3">
+                                    <i class="fas fa-user-tag"></i> Manage Roles
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{% url 'security_settings' %}" class="btn btn-block btn-outline-dark mb-3">
+                                    <i class="fas fa-shield-alt"></i> Security Policies
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{% url 'announcements' %}" class="btn btn-block btn-outline-dark mb-3">
+                                    <i class="fas fa-bullhorn"></i> Post Announcements
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-md-4">
+                <!-- Compliance Overview -->
+                <div class="card card-success">
+                    <div class="card-header">
+                        <h3 class="card-title">Compliance Status</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="complianceChart" style="min-height: 300px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="card card-info">
+                    <div class="card-header">
+                        <h3 class="card-title">Financial Snapshot</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="info-box bg-light">
+                                    <span class="info-box-icon"><i class="fas fa-wallet text-success"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Total Budget</span>
+                                        <span class="info-box-number">${{ total_budget }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-box bg-light">
+                                    <span class="info-box-icon"><i class="fas fa-coins text-danger"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">Expenses</span>
+                                        <span class="info-box-number">${{ total_expenses }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}
+
+{% block custom_js %}
+<script>
+    $(document).ready(function(){
+        // Compliance Chart
+        var complianceChart = new Chart($('#complianceChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Completed', 'Pending', 'Overdue'],
+                datasets: [{
+                    data: {{ compliance_data|safe }},
+                    backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true
+            }
+        });
+    });
+</script>
+{% endblock custom_js %}

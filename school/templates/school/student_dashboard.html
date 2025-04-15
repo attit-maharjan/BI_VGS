@@ -1,67 +1,151 @@
+<!-- student_dashboard.html -->
 {% extends 'school/base.html' %}
 {% load static %}
-{% block page_title %}{{page_title}}{% endblock page_title %}
 
 {% block mainContent %}
-<section class="content">
-    <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-            <!-- Your existing small boxes code here -->
+<div class="dashboard-container">
+    <div class="dashboard-sidebar">
+        <div class="profile-section">
+            <img src="{{ school_settings.school_logo.url }}" alt="Student Photo" class="profile-img">
+            <h4>{{ user.get_full_name }}</h4>
+            <p>Class: {{ student_class }}</p>
+            <p>Roll Number: {{ enrollment_number }}</p>
         </div>
-        
-        <div class="row">
-            <div class="col-lg-6">
-                <!-- DONUT CHART -->
-                <div class="card card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="attendanceData" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="card card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title">{{page_title}}</h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart">
-                            <canvas id="attendanceStatistics" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <nav class="dashboard-nav">
+            <a href="#timetable" class="active"><i class="fas fa-calendar-alt"></i> Timetable</a>
+            <a href="#assignments"><i class="fas fa-book-open"></i> Assignments</a>
+            <a href="#results"><i class="fas fa-chart-bar"></i> Results</a>
+            <a href="#resources"><i class="fas fa-download"></i> Study Materials</a>
+        </nav>
     </div>
-</section>
-{% endblock mainContent %}  <!-- Fixed endblock -->
 
-{% block custom_js %}
+    <div class="dashboard-main">
+        <!-- Timetable Section -->
+        <section id="timetable" class="dashboard-section active">
+            <h3><i class="fas fa-calendar-day"></i> Weekly Schedule</h3>
+            <div class="timetable">
+                {% for day in schedule %}
+                <div class="timetable-day">
+                    <h4>{{ day.day }}</h4>
+                    <ul>
+                        {% for class in day.classes %}
+                        <li>
+                            <span class="time">{{ class.time }}</span>
+                            <span class="subject">{{ class.subject }}</span>
+                            <span class="room">{{ class.room }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Assignments Section -->
+        <section id="assignments" class="dashboard-section">
+            <h3><i class="fas fa-tasks"></i> Current Assignments</h3>
+            <div class="assignments-list">
+                {% for assignment in assignments %}
+                <div class="assignment-card {% if assignment.submitted %}submitted{% endif %}">
+                    <div class="assignment-header">
+                        <h4>{{ assignment.subject }}</h4>
+                        <span class="due-date">Due: {{ assignment.due_date }}</span>
+                    </div>
+                    <p>{{ assignment.description }}</p>
+                    <div class="assignment-footer">
+                        {% if not assignment.submitted %}
+                        <button class="btn-submit" data-assignment-id="{{ assignment.id }}">
+                            Submit Now
+                        </button>
+                        {% else %}
+                        <span class="submitted-status">Submitted on {{ assignment.submission_date }}</span>
+                        {% endif %}
+                        <a href="#" class="download-btn"><i class="fas fa-download"></i> Materials</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results" class="dashboard-section">
+            <h3><i class="fas fa-chart-line"></i> Academic Performance</h3>
+            <div class="results-container">
+                <div class="grade-overview">
+                    <div class="overall-grade">
+                        <h4>Current GPA: 3.8</h4>
+                        <div class="grade-progress">
+                            <div class="progress-bar" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <table class="grade-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                                <th>Grade</th>
+                                <th>Rank</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>{{ result.subject }}</td>
+                                <td>{{ result.marks }}</td>
+                                <td>{{ result.grade }}</td>
+                                <td>{{ result.rank }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- Assignment Submission Modal -->
+<div class="modal" id="submissionModal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Submit Assignment</h3>
+        <form id="assignmentForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Select File</label>
+                <input type="file" accept=".pdf,.doc,.docx" required>
+            </div>
+            <div class="form-group">
+                <label>Additional Comments</label>
+                <textarea rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Upload Submission</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Add comprehensive CSS styling here */
+    .dashboard-container { display: flex; }
+    .dashboard-sidebar { width: 250px; background: #2c3e50; color: white; }
+    .dashboard-main { flex: 1; padding: 20px; }
+    .assignment-card { background: white; padding: 20px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .grade-table { width: 100%; border-collapse: collapse; }
+    .grade-table th, .grade-table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+    .btn-submit { background: #3498db; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
+    /* Add more styles as needed */
+</style>
+
 <script>
-$(document).ready(function(){
-    // Your existing chart JS code here
-});
+    // JavaScript for interactive functionality
+    document.querySelectorAll('.btn-submit').forEach(button => {
+        button.addEventListener('click', () => {
+            document.getElementById('submissionModal').style.display = 'block';
+        });
+    });
 
-// Firebase initialization and messaging code here
+    // Close modal
+    document.querySelector('.close').addEventListener('click', () => {
+        document.getElementById('submissionModal').style.display = 'none';
+    });
 </script>
-{% endblock custom_js %}
+{% endblock %}

@@ -40,8 +40,8 @@ def dashboard(request):
             return redirect('school:teacher_dashboard')
         elif person.role == 'parent':
             return redirect('school:parent_dashboard')
-        elif person.role == 'staff':
-            return redirect('school:staff_dashboard')
+        elif person.role == 'admin':
+            return redirect('school:admin_dashboard')
         else:
             # Handle unknown roles or add more roles as needed
             return redirect('school:student_dashboard')
