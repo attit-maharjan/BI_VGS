@@ -20,6 +20,6 @@ from office import views as office_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('school.urls')),
+    path('', include('school.urls', namespace='school')),
 ]
 

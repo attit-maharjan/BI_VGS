@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% load static %}
+
+{% endblock %}
+
+{% block mainContent %}
+    <!-- Admissions content -->
+    <h1>Academics</h1>
+    <p>Explore our academic offerings and programs. At BI_VGS, we provide courses that meet the highest standards and prepare students for successful careers.</p>
+    
+    <section class="academics-section">
+        <h1 class="title">Explore Our Prestigious Secondary School Programs</h1>
+        <p class="intro-text">At BI_VGS, we offer secondary school programs designed to provide students with the academic foundation and skills they need to excel in higher education and industry. Our courses meet the highest European industry standards, ensuring students are prepared for a successful future.</p>
+    
+        <div class="programs">
+            <div class="program" onclick="showDetails('business')">
+                <h2>Business and Economics</h2>
+                <p>Courses focused on the fundamentals of business, economics, and entrepreneurship.</p>
+            </div>
+            <div class="program" onclick="showDetails('technology')">
+                <h2>Technology and Computer Science</h2>
+                <p>Explore the world of technology and computer science with hands-on experience in programming and problem-solving.</p>
+            </div>
+            <div class="program" onclick="showDetails('science')">
+                <h2>Science and Innovation</h2>
+                <p>Study the latest advancements in science with a focus on real-world applications and sustainability.</p>
+            </div>
+            <div class="program" onclick="showDetails('arts')">
+                <h2>Arts and Humanities</h2>
+                <p>Develop creative thinking and critical analysis through courses in arts, culture, and history.</p>
+            </div>
+        </div>
+    
+        <div id="program-details" class="program-details">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+    </section>
+    
+    <script>
+        function showDetails(program) {
+            const details = {
+                business: "Business and Economics: Learn about entrepreneurship, economics, and business fundamentals.",
+                technology: "Technology and Computer Science: Gain hands-on experience in programming and problem-solving.",
+                science: "Science and Innovation: Explore advancements in science with a focus on sustainability.",
+                arts: "Arts and Humanities: Develop creative thinking and critical analysis through arts and culture."
+            };
+    
+            const detailsDiv = document.getElementById('program-details');
+            detailsDiv.innerHTML = `<p>${details[program]}</p>`;
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'school/base.html' %}
+{% load static %}
+{% block page_title %}{{page_title}}{% endblock page_title %}
+
+{% block mainContent %}
+<section class="content">
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <!-- Your existing small boxes code here -->
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-6">
+                <!-- DONUT CHART -->
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">{{page_title}}</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="attendanceData" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">{{page_title}}</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart">
+                            <canvas id="attendanceStatistics" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock mainContent %}  <!-- Fixed endblock -->
+
+{% block custom_js %}
+<script>
+$(document).ready(function(){
+    // Your existing chart JS code here
+});
+
+// Firebase initialization and messaging code here
+</script>
+{% endblock custom_js %}

@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+
+{% block title %}About Us - DataScience 2023 Blog{% endblock %}
+
+{% block mainContent %}
+<h1>About Us</h1>
+<div class="info-boxes">
+  <div class="box">
+    <h3>About Our School</h3>
+    <p>BI_VGS Oslo is dedicated to providing quality education in line with European industry standards. Our programs equip students with the skills and knowledge to excel in their careers.</p>
+    <button onclick="getRandomInfo('school')">Learn More</button>
+    <div id="school-info"></div>
+  </div>
+  
+  <div class="box">
+    <h3>Our Mission</h3>
+    <p>Our mission is to foster the development of future leaders by providing practical industry-focused training and academic excellence.</p>
+    <button onclick="getRandomInfo('mission')">Get Random Insight</button>
+    <div id="mission-info"></div>
+  </div>
+
+  <div class="box">
+    <h3>Our Values</h3>
+    <p>At BI_VGS, we value integrity, innovation, and a commitment to excellence in education, fostering a community of critical thinkers and forward-looking professionals.</p>
+    <button onclick="getRandomInfo('values')">Discover More</button>
+    <div id="values-info"></div>
+  </div>
+</div>
+{% endblock %}

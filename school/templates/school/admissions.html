@@ -1,0 +1,140 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admissions - BI_VGS</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <section class="admissions-section">
+      <h1 class="title">Admissions to BI_VGS</h1>
+      <p class="intro-text">Please fill out the form below to apply for admission to BI_VGS. Our intelligent system will help guide you through the class selection process based on your capabilities.</p>
+  
+      <form id="admissions-form" onsubmit="return validateForm()">
+        <div class="form-section">
+          <label for="fullName">Full Name:</label>
+          <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+        </div>
+        
+        <div class="form-section">
+          <label for="dob">Date of Birth:</label>
+          <input type="date" id="dob" name="dob" required>
+        </div>
+  
+        <div class="form-section">
+          <label for="classLevel">Select Class Level:</label>
+          <select id="classLevel" name="classLevel" onchange="populateSections()" required>
+            <option value="">-- Select Class Level --</option>
+            <option value="1">Class 1</option>
+            <option value="2">Class 2</option>
+            <option value="3">Class 3</option>
+            <option value="4">Class 4</option>
+            <option value="5">Class 5</option>
+            <option value="6">Class 6</option>
+            <option value="7">Class 7</option>
+            <option value="8">Class 8</option>
+          </select>
+        </div>
+  
+        <div class="form-section">
+          <label for="section">Select Section:</label>
+          <select id="section" name="section" required>
+            <option value="A">--Section A--</option>
+            <option value="B">--Section B--</option>
+            <option value="C">--Section C--</option>
+            <option value="D">--Section D--</option>
+          </select>
+        </div>
+  
+        <div class="form-section">
+          <label for="suggestionBox">Suggested Section (based on your capabilities):</label>
+          <input type="text" id="suggestionBox" name="suggestionBox" disabled placeholder="Section suggestion will appear here">
+        </div>
+  
+        <div class="form-section">
+          <button type="submit">Submit Application</button>
+        </div>
+      </form>
+  
+      <div id="success-message" class="hidden">
+        <h2>Application Submitted Successfully</h2>
+        <p>Thank you for applying to BI_VGS! Our admissions team will contact you soon with the next steps.</p>
+      </div>
+    </section>
+  
+    <script src="corejs/BI.js"></script>
+  </body>
+  </html>
+{% endblock %}
+
+{% block mainContent %}
+    <!-- Admissions content -->
+    head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admissions - BI_VGS</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <section class="admissions-section">
+      <h1 class="title">Admissions to BI_VGS</h1>
+      <p class="intro-text">Please fill out the form below to apply for admission to BI_VGS. Our intelligent system will help guide you through the class selection process based on your capabilities.</p>
+  
+      <form id="admissions-form" onsubmit="return validateForm()">
+        <div class="form-section">
+          <label for="fullName">Full Name:</label>
+          <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+        </div>
+        
+        <div class="form-section">
+          <label for="dob">Date of Birth:</label>
+          <input type="date" id="dob" name="dob" required>
+        </div>
+  
+        <div class="form-section">
+          <label for="classLevel">Select Class Level:</label>
+          <select id="classLevel" name="classLevel" onchange="populateSections()" required>
+            <option value="">-- Select Class Level --</option>
+            <option value="1">Class 1</option>
+            <option value="2">Class 2</option>
+            <option value="3">Class 3</option>
+            <option value="4">Class 4</option>
+            <option value="5">Class 5</option>
+            <option value="6">Class 6</option>
+            <option value="7">Class 7</option>
+            <option value="8">Class 8</option>
+          </select>
+        </div>
+  
+        <div class="form-section">
+          <label for="section">Select Section:</label>
+          <select id="section" name="section" required>
+            <option value="A">--Section A--</option>
+            <option value="B">--Section B--</option>
+            <option value="C">--Section C--</option>
+            <option value="D">--Section D--</option>
+          </select>
+        </div>
+  
+        <div class="form-section">
+          <label for="suggestionBox">Suggested Section (based on your capabilities):</label>
+          <input type="text" id="suggestionBox" name="suggestionBox" disabled placeholder="Section suggestion will appear here">
+        </div>
+  
+        <div class="form-section">
+          <button type="submit">Submit Application</button>
+        </div>
+      </form>
+  
+      <div id="success-message" class="hidden">
+        <h2>Application Submitted Successfully</h2>
+        <p>Thank you for applying to BI_VGS! Our admissions team will contact you soon with the next steps.</p>
+      </div>
+    </section>
+  
+    <script src="corejs/BI.js"></script>
+  </body>
+  </html>
+{% endblock %}
