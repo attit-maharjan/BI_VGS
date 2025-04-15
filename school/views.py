@@ -38,4 +38,6 @@ def home_view(request):
     return render(request, 'school/home.html')  # Render the home page template
 
 def home(request):
-    return render(request, 'school/home.html', {'user': request.user})  # Pass the logged-in user to the template
+    return render(request, 'school/base.html')  # Render the base template
+
+
