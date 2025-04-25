@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+{% extends 'school/base.html' %}
 {% load static %}
 {% block page_title %}{{page_title}}{% endblock page_title %}
 
@@ -28,7 +28,7 @@
                                     <td>{{ forloop.counter }}</td>
                                     <td>{{course.name}}</td>
                                     <td>
-                                        <a href="{% url 'coer/dash_manage/edit_course' course.id %}" class="btn btn-primary">Edit</a> -
+                                        <a href="{% url 'school/dash_manage/edit_course' course.id %}" class="btn btn-primary">Edit</a> -
                                         <a href="{% url 'delete_course' course.id %}" onclick="return confirm('Are you sure you want to delete this course ?')" class="btn btn-danger">Delete</a> 
                                     </td>
                                 </tr>
