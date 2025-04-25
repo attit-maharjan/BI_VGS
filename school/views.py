@@ -274,5 +274,26 @@ def career(request):
     return render(request, 'school/career.html')  # Render the career page template
 def calendar(request):
     return render(request, 'school/calendar.html')  # Render the calendar page template
+
+def calendar_view(request):
+    # Example data
+    months = [...]  # Your months data
+    events = [...]  # Your events data
+    important_dates = {
+        'red': [...],  # Dates with red background
+        'yellow': [...]  # Dates with yellow background
+    }
+
+    # Check if the calendar should be loaded
+    load_calendar = request.GET.get('load_calendar', 'true') == 'true'
+
+    context = {
+        'months': months,
+        'events': events,
+        'important_dates': important_dates,
+        'load_calendar': load_calendar
+    }
+    return render(request, 'school/calendar.html', context)
+
 def password_reset(request):
     return render(request, 'school/password_reset.html')  # Render the password reset page template
