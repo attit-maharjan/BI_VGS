@@ -1,8 +1,8 @@
 # ==========================================================
 # 📁 enrollments/models.py
 # ==========================================================
-# This file contains models related to teacher subject
-# assignments and other enrollment-related data.
+# This file contains models related to teacher subject is
+# assignments and other enrollment-related data..........
 # ==========================================================
 
 
