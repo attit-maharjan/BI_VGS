@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,13 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'office',
-    'school',
-    'users',
-    'the_school',
-    'enrollments',
-    'exams',
-
+    'widget_tweaks',
+    'users.apps.UsersConfig',               
+    'the_school.apps.TheSchoolConfig',      
+    'enrollments.apps.EnrollmentsConfig',   
+    'exams.apps.ExamsConfig',                
+    'messaging.apps.MessagingConfig',
+    
     
 ]
 
@@ -65,7 +64,7 @@ ROOT_URLCONF = 'BI_VGS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,10 +127,42 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = 'bivgs.central@gmail.com'
+EMAIL_HOST_PASSWORD = 'imwknrkjnmpsdgwn'
+DEFAULT_FROM_EMAIL = 'bivgs.central@gmail.com'
+ADMINS = [('Admin Name', 'admin@example.com')]
+
+
+
 CSV_DATA_DIR = BASE_DIR /"data" / "csv"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+AUTH_USER_MODEL = 'users.User' 
+
+LOGIN_URL = 'users:login'  
+LOGIN_REDIRECT_URL = 'the_school:index'  
+LOGOUT_REDIRECT_URL = 'users:login'  
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default backend for authentication
+]
