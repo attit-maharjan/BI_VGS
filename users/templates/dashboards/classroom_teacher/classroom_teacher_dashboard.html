@@ -1,0 +1,94 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
+
+{% block title %}
+    {{ user.get_full_name|default:"Classroom Teacher" }} Dashboard | {{ school_settings.school_name }}
+{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+
+    <!-- 🏫 Header Card -->
+    <div class="bg-white p-6 rounded-2xl shadow text-center">
+        <h1 class="text-3xl font-bold text-gray-800">
+            Welcome, {{ user.get_full_name|default:"Teacher" }}
+        </h1>
+        <p class="text-gray-600 text-sm mt-2">
+            This is your classroom dashboard for 
+            <strong>{{ class_group.name|default:"No Class Assigned" }}</strong>
+            — Academic Year <strong>{{ current_year.name }}</strong>.
+        </p>
+        <p class="mt-1 text-xs text-gray-400 italic">
+            Total Students: {{ students|length }}
+        </p>
+    </div>
+
+    <!-- 📋 Student Table -->
+    <div class="bg-white rounded-2xl shadow p-4 overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+            <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
+                <tr>
+                    <th class="px-4 py-2 text-left">Photo</th>
+                    <th class="px-4 py-2 text-left cursor-pointer">Full Name</th>
+                    <th class="px-4 py-2 text-left cursor-pointer">Gender</th>
+                    <th class="px-4 py-2 text-left">Class Group</th>
+                    <th class="px-4 py-2 text-left cursor-pointer">Avg. Score</th>
+                    <th class="px-4 py-2 text-left">Status</th>
+                    <th class="px-4 py-2 text-left">Dashboard</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for enrollment in students %}
+                {% with student=enrollment.student %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-4 py-2">
+                        <img src="{{ student.user.profile_image.url }}" alt="{{ student.user.get_full_name }}" class="w-10 h-10 rounded-full object-cover border">
+                    </td>
+                    <td class="px-4 py-2 font-semibold text-gray-800">
+                        {{ student.user.get_full_name }}
+                    </td>
+                    <td class="px-4 py-2 text-gray-600">
+                        {{ student.user.gender|title }}
+                    </td>
+                    <td class="px-4 py-2 text-gray-600">
+                        {{ enrollment.class_group.name }}
+                    </td>
+
+                    <td class="px-4 py-2 font-bold {{ student.avg_score|score_to_text_color }}">
+                      {{ student.avg_score|default:"—" }}
+                    </td>
+                  
+                    <!-- 🟢 Status Label with Icon -->
+                    <td class="px-4 py-2">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-800 flex items-center gap-2 w-max">
+                        <i class="fas fa-circle {{ student.avg_score|score_to_text_color }}"></i>
+                        {{ student.status_label }}
+                        </span>
+                    </td>
+                            
+
+                    <td class="px-4 py-2">
+                        <a href="{% student_dashboard_url student %}"
+                           class="inline-flex items-center space-x-1 text-indigo-600 hover:text-indigo-800 text-sm font-semibold transition">
+                          <span>View</span>
+                          <i class="fas fa-chart-line text-xs"></i>
+                        </a>
+                    </td>
+                      
+                      
+                </tr>
+                {% endwith %}
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-gray-400 py-6">
+                        No students enrolled yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

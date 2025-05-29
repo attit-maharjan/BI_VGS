@@ -1,0 +1,9 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
+
+{% block title %}Subjects &amp; Teachers | {{ student.user.get_full_name }}{% endblock %}
+
+{% block content %}
+  {% include "dashboards/shared/includes/_view_student_subjects.html" with student=student student_subjects=student_subjects %}
+{% endblock %}

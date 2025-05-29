@@ -1,0 +1,10 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}
+    {{ student.user.get_full_name }} | Dashboard | {{ school_settings.school_name }}
+{% endblock %}
+
+{% block content %}
+  {% include "dashboards/shared/includes/_view_studenthub_dashboard.html" with student=student metadata=metadata insights=insights %}
+{% endblock %}

@@ -1,0 +1,65 @@
+{% load shared_filters %}
+<div class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition duration-300 group relative overflow-hidden ring-1 ring-blue-100">
+
+    <!-- 💠 Status Badge -->
+    <div class="absolute top-4 right-4 z-10">
+        <span class="text-xs font-semibold px-3 py-1 rounded-full shadow-sm {{ child.insights.report_card.status_badge_class }}">
+            {{ child.insights.report_card.status_badge_label }}
+        </span>
+    </div>
+
+    <!-- 👤 Student Header -->
+    <div class="flex items-center space-x-4 mb-4">
+        <img src="{{ child.student.user.profile_image.url }}"
+             class="w-16 h-16 rounded-full object-cover border-2 border-white shadow-md group-hover:scale-105 transition"
+             alt="{{ child.student.user.get_full_name }}">
+        <div>
+            <h3 class="text-xl font-bold text-gray-800">{{ child.student.user.get_full_name }}</h3>
+            <p class="text-sm text-gray-500">Academic Year: {{ child.insights.report_card.academic_year }}</p>
+        </div>
+    </div>
+
+
+
+    <!-- 📊 Overview Metrics -->
+    <div class="grid grid-cols-3 gap-3 text-sm mb-4">
+        <div class="bg-gray-50 p-2 rounded-lg text-center shadow-sm">
+            <p class="bs-parent-label-group"><i class="fas fa-users mr-1"></i>Class Group</p>
+            <p class="text-sm font-semibold text-indigo-600">{{ child.insights.report_card.class_group }}</p>
+        </div>
+        <div class="bg-gray-50 p-2 rounded-lg text-center shadow-sm">
+            <p class="bs-parent-label-score"><i class="fas fa-chart-line mr-1"></i>Avg. Score</p>
+            <p class="text-sm font-semibold text-green-600">{{ child.insights.report_card.average_score }}</p>
+        </div>
+        <div class="bg-gray-50 p-2 rounded-lg text-center shadow-sm">
+            <p class="bs-parent-label-subjects"><i class="fas fa-book mr-1"></i>Subjects</p>
+            <p class="text-sm font-semibold text-blue-600">{{ child.insights.report_card.subject_count }}</p>
+        </div>
+    </div>
+
+
+    <!-- 📈 Exam Comparison Chart (New) -->
+    <canvas id="exam-comparison-chart-{{ child.student.id }}" class="mt-4 w-full h-[250px]"></canvas>
+
+    <hr class="bs-hr-spaced" />
+
+  
+    <!-- 🚀 Styled Action Buttons -->
+    <div class="mt-5 flex justify-between text-sm font-medium">
+        <a href="{% student_subjects_url child.student %}" class="bs-action-link">
+            <i class="fas fa-book-open"></i>
+            <span>Subjects</span>
+        </a>
+        <a href="{% student_dashboard_url child.student %}" class="bs-action-link">
+            <i class="fas fa-chart-line"></i>
+            <span>{{ child.student.user.get_full_name }}'s Dashboard</span>
+        </a>
+    </div>
+        
+</div>
+
+
+
+
+
+

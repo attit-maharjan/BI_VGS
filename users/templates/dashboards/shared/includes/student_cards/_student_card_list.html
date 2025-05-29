@@ -1,0 +1,9 @@
+{# users/templates/shared/includes/student_cards/_student_card_list.html #}
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    {% for student in students %}
+        {% include "dashboards/shared/includes/student_cards/_student_card.html" with student=student %}
+    {% empty %}
+        <p class="text-center col-span-full text-gray-500">No students found.</p>
+    {% endfor %}
+</div>

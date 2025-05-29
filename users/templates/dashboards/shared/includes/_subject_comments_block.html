@@ -1,0 +1,71 @@
+{% load shared_filters %}
+<div class="bg-white p-6 rounded-xl shadow space-y-6">
+  <!-- 🏫 Header Card -->
+  <div class="text-center border-b pb-4">
+    <h2 class="text-2xl font-bold text-bs-5">AI-Generated Subject Comments</h2>
+    <p class="text-gray-500 text-sm italic">Based on student's performance and class group metrics</p>
+  </div>
+
+  <!-- 🧑‍🎓 Student Meta Info -->
+  <div class="flex flex-col md:flex-row items-center gap-6 border-b pb-6">
+    <img src="{{ student.user.profile_image.url }}" alt="Profile" class="w-24 h-24 rounded-full shadow-md object-cover ring-2 ring-bs-primary" />
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full text-sm md:text-base">
+      <div>
+        <div class="text-gray-500">Full Name</div>
+        <div class="font-semibold text-gray-800">{{ student.user.get_full_name }}</div>
+      </div>
+      <div>
+        <div class="text-gray-500">Student ID</div>
+        <div class="font-semibold text-gray-800">{{ student.student_id }}</div>
+      </div>
+      <div>
+        <div class="text-gray-500">Class Group</div>
+        <div class="font-semibold text-gray-800">{{ classgroup.name }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🧾 Exam Table -->
+  <div class="overflow-x-auto">
+    <h3 class="text-lg font-semibold text-gray-800 mb-2">Exam Scores Summary</h3>
+    <table class="w-full text-left border-collapse border">
+      <thead>
+        <tr class="bs-3 text-white text-sm">
+          <th class="p-2">Subject</th>
+          <th class="p-2">Exam</th>
+          <th class="p-2">Student Score</th>
+          <th class="p-2">Class Average</th>
+          <th class="p-2">Grade</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in subject_comments %}
+          <tr class="hover:bg-gray-50 text-sm border-b">
+            <td class="p-2 font-semibold">{{ item.subject }}</td>
+            <td class="p-2">{{ item.exam }}</td>
+            <td class="p-2">{{ item.score }}</td>
+            <td class="p-2">{{ item.class_avg|floatformat:2 }}</td>
+            <td class="p-2">
+              <span class="inline-block px-2 py-1 text-xs font-bold text-white rounded-lg {{ item.score|score_to_color }}">
+                {{ item.grade }}
+              </span>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+    <!-- 💬 Comment Blocks -->
+    <div class="space-y-4">
+        {% for item in subject_comments %}
+        <div class="border-l-4 pl-4 py-2 bg-gray-50 rounded-md" style="border-left-color: {{ item.score|score_to_border_color_code }};">
+            <h3 class="font-bold text-lg {{ item.score|score_to_text_color }}">{{ item.subject }}</h3>
+            <p class="text-sm text-gray-600">Exam: <strong>{{ item.exam }}</strong></p>
+            <p class="mt-2 text-sm italic text-gray-700">{{ item.comment }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+

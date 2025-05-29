@@ -1,0 +1,10 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
+
+{% block content %}
+<div class="p-4">
+    <h2 class="text-2xl font-bold mb-4">Your Students</h2>
+    {% include "dashboards/shared/includes/student_cards/_student_card_list.html" with students=students %}
+</div>
+{% endblock %}

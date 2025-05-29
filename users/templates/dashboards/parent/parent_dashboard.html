@@ -1,0 +1,137 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}
+    {{ user.get_full_name|default:"Parent" }} Dashboard | {{ school_settings.school_name|default:"School" }}
+{% endblock %}
+
+{% block content %}
+<div class="space-y-10">
+
+    <!-- 🎓 Welcome Header -->
+    <div class="bg-white p-6 rounded-2xl shadow text-center">
+        <h1 class="text-3xl font-bold text-gray-800">
+            Welcome, {{ user.get_full_name|default:"Parent" }}
+        </h1>
+        <p class="text-gray-600 text-sm mt-2">
+            {% if child_count == 1 %}
+                Here’s a snapshot of your child’s academic progress
+            {% else %}
+                Here’s a snapshot of your children’s academic progress
+            {% endif %}
+            at <strong>{{ school_settings.school_name }}</strong> —
+            Academic Year <strong>{{ current_year.name }}</strong>.
+        </p>
+        {% if child_names %}
+        <p class="mt-1 text-xs text-gray-400 italic">
+            {{ child_names|join:" | " }}
+        </p>
+        {% endif %}
+    </div>
+
+    <!-- 👨‍👧 Child Overview -->
+    <div>
+        <h2 class="text-xl font-semibold text-gray-800 mb-2 text-center">
+            {% if child_count == 1 %}
+                Your Child
+            {% else %}
+                Your Children
+            {% endif %}
+        </h2>
+        {% if child_count > 1 %}
+        <p class="text-sm text-gray-500 italic mb-4 text-center">
+            You have {{ child_count }} children. Scroll down to view them all. For detailed information per child, click <strong class="text-blue-700">Child Dashboard</strong> below their card
+        </p>
+        {% endif %}
+        
+
+        {% if children_dashboards %}
+            {% if children_dashboards|length == 1 %}
+                <div class="flex justify-center">
+                <div class="w-full max-w-xl">
+                    {% include "dashboards/shared/includes/_card_student_or_child.html" with child=children_dashboards.0 %}
+                </div>
+                </div>
+            {% else %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for child in children_dashboards %}
+                    {% include "dashboards/shared/includes/_card_student_or_child.html" with child=child %}
+                {% endfor %}
+                </div>
+        {% endif %}
+      
+        {% else %}
+        <div class="bg-white p-6 rounded-2xl shadow text-center">
+            <p class="text-gray-500 text-sm">No children linked to your account yet.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    {% for child in children_dashboards %}
+    (function(){
+        const canvasId = "exam-comparison-chart-{{ child.student.id }}";
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+
+        const labels = {{ child.insights.report_card.exam_comparison_chart.exam_codes|safe }};
+        const studentScores = {{ child.insights.report_card.exam_comparison_chart.student_scores|safe }};
+        const classAverages = {{ child.insights.report_card.exam_comparison_chart.class_averages|safe }};
+
+        const ctx = canvas.getContext("2d");
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: '{{ child.student.user.get_full_name }}',
+                        data: studentScores,
+                        borderColor: '#1e3a8a',
+                        backgroundColor: 'rgba(30, 58, 138, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                    },
+                    {
+                        label: 'Class Avg',
+                        data: classAverages,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderDash: [5, 5],
+                        tension: 0.3,
+                        fill: false,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: {
+                        display: true,
+                        text: 'Exam Performance Comparison'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    })();
+    {% endfor %}
+});
+</script>
+{% endblock %}

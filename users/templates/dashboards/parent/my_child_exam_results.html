@@ -1,0 +1,15 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}Exam Results | {{ student.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="bg-white p-6 rounded-2xl shadow">
+    <h2 class="text-xl font-bold text-gray-800 mb-1">Exam Results</h2>
+    <p class="text-sm text-gray-500">Full summary of all exam scores for <strong>{{ student.user.get_full_name }}</strong></p>
+  </div>
+
+  {% include "dashboards/shared/includes/_exam_result_table_summary.html" with student=student summary=summary overall=overall average_grade=average_grade average_score=average_score academic_year=academic_year %}
+</div>
+{% endblock %}

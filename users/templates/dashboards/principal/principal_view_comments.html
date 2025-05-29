@@ -1,0 +1,9 @@
+{% extends "base/base_dashboard.html" %}
+{% load shared_filters %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-8">
+  {% include "dashboards/shared/includes/_subject_comments_block.html" %}
+</div>
+{% endblock %}

@@ -1,0 +1,131 @@
+<!-- ✅ dashboards/shared/includes/_view_studenthub_dashboard.html -->
+ {% load static %}
+ {% load shared_filters %}
+<div class="space-y-6">
+
+    <!-- 🧠 Title & Tagline -->
+    <div class="text-center">
+      <h1 class="text-3xl font-bold text-gray-800">Student Academic Dashboard</h1>
+      <p class="text-sm text-gray-500 mt-1 italic">Track courses, grades, and academic milestones all in one place.</p>
+    </div>
+  
+    <!-- 👤 Student Profile Card -->
+    <div class="bg-white p-6 rounded-2xl shadow flex flex-col items-center space-y-3 text-center">
+      <img src="{{ student.user.profile_image.url }}" class="w-20 h-20 rounded-full object-cover border-2 border-white shadow">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">{{ student.user.get_full_name }}</h2>
+        <p class="text-sm text-gray-500">Student Profile</p>
+      </div>
+    </div>
+  
+    <!-- 🏫 Class Metadata Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-gray-50 p-4 rounded-lg text-center shadow">
+        <p class="bs-parent-label-group"><i class="fas fa-users mr-1"></i>Class Group</p>
+        <p class="text-base font-semibold text-blue-700">{{ metadata.class_group.name }}</p>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-lg text-center shadow">
+        <p class="bs-parent-label-score"><i class="fas fa-calendar-alt mr-1"></i>Academic Year</p>
+        <p class="text-base font-semibold text-indigo-700">{{ metadata.class_group.academic_year.name }}</p>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-lg text-center shadow">
+        <p class="bs-parent-label-subjects"><i class="fas fa-chalkboard-teacher mr-1"></i>Class Teacher</p>
+        <p class="text-base font-semibold text-gray-700">{{ metadata.class_teacher.user.get_full_name|default:"N/A" }}</p>
+      </div>
+    </div>
+  
+    <!-- 📊 GPA + Score + Grade Cards with Span Styling -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-white p-4 rounded-lg shadow text-center">
+        <p class="bs-parent-label-score"><i class="fas fa-star-half-alt mr-1"></i>GPA</p>
+        {% if insights.report_card.gpa %}
+          <span class="inline-block text-xl font-bold text-white rounded-full px-3 py-1
+            {% with insights.report_card.gpa as g %}
+              {% if g >= 3.7 %}bs-5
+              {% elif g >= 3.0 %}bs-6
+              {% elif g >= 2.0 %}bs-9
+              {% elif g >= 1.0 %}bs-11
+              {% else %}bs-14
+              {% endif %}
+            {% endwith %}">
+            {{ insights.report_card.gpa }}
+          </span>
+        {% else %}
+          <span class="text-gray-400 italic">N/A</span>
+        {% endif %}
+      </div>
+      <div class="bg-white p-4 rounded-lg shadow text-center">
+        <p class="bs-parent-label-subjects"><i class="fas fa-certificate mr-1"></i>Average Grade</p>
+        {% if insights.report_card.average_grade %}
+          <span class="inline-block text-xl font-bold text-white rounded-full px-3 py-1
+            {% with insights.report_card.average_grade|upper as g %}
+              {% if g|slice:":1" == 'A' %}bs-5
+              {% elif g|slice:":1" == 'B' %}bs-6
+              {% elif g|slice:":1" == 'C' %}bs-9
+              {% elif g|slice:":1" == 'D' %}bs-11
+              {% elif g|slice:":1" == 'E' %}bs-13
+              {% elif g|slice:":1" == 'F' %}bs-14
+              {% else %}bg-gray-400
+              {% endif %}
+            {% endwith %}">
+            {{ insights.report_card.average_grade }}
+          </span>
+        {% else %}
+          <span class="text-gray-400 italic">N/A</span>
+        {% endif %}
+      </div>
+      <div class="bg-white p-4 rounded-lg shadow text-center">
+        <p class="bs-parent-label-score"><i class="fas fa-percentage mr-1"></i>Average Score</p>
+        {% if insights.report_card.average_score %}
+          <span class="inline-block text-xl font-bold text-white rounded-full px-3 py-1
+            {% with insights.report_card.average_score as s %}
+              {% if s >= 80 %}bs-5
+              {% elif s >= 70 %}bs-6
+              {% elif s >= 60 %}bs-9
+              {% elif s >= 50 %}bs-11
+              {% else %}bs-14
+              {% endif %}
+            {% endwith %}">
+            {{ insights.report_card.average_score }}
+          </span>
+        {% else %}
+          <span class="text-gray-400 italic">N/A</span>
+        {% endif %}
+      </div>
+    </div>
+  
+
+
+    <!-- 📚 Insight Navigation Buttons -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+      <a href="{% student_subjects_url student %}" class="bs-parent-btn bs-1 text-white font-semibold py-2 px-4 rounded-lg text-center">
+        <i class="fas fa-book mr-2"></i> Subjects
+      </a>
+      <a href="{% student_exam_results_url student %}" class="bs-parent-btn bs-2 text-white font-semibold py-2 px-4 rounded-lg text-center">
+        <i class="fas fa-pen-alt mr-2"></i> Exam Results
+      </a>
+      <a href="{% student_exam_timetable_url student %}" class="bs-parent-btn bs-3 text-white font-semibold py-2 px-4 rounded-lg text-center">
+        <i class="fas fa-calendar-alt mr-2"></i> Exam Timetable
+      </a>
+      <a href="{% student_performance_url student %}" class="bs-parent-btn bs-4 text-white font-semibold py-2 px-4 rounded-lg text-center">
+        <i class="fas fa-chart-line mr-2"></i> Performance Tracking
+      </a>
+      <a href="{% student_grade_insights_url student %}" class="bs-parent-btn bs-5 text-white font-semibold py-2 px-4 rounded-lg text-center">
+        <i class="fas fa-chart-pie mr-2"></i> Grade Insights
+      </a>
+      <a href="{% student_report_card_url student %}" class="bs-parent-btn bs-6 text-white font-semibold py-2 px-4 rounded-lg text-center">
+        <i class="fas fa-file-alt mr-2"></i> Report Card
+      </a>
+      <a href="{% student_comments_url student %}" class="bs-parent-btn bs-7 text-white font-semibold py-2 px-4 rounded-lg text-center">
+        <i class="fas fa-comments mr-2"></i> Subject Comments
+      </a>
+      <a href="{% student_report_card_pdf_url student %}" target="_blank" class="bs-parent-btn bs-9 text-white font-semibold py-2 px-4 rounded-lg text-center no-print">
+        <i class="fas fa-download mr-2"></i> Report Card (PDF)
+      </a>
+      <a href="{% student_contact_teachers_url student %}" class="bs-parent-btn bs-11 text-white font-semibold py-2 px-4 rounded-lg text-center">
+        <i class="fas fa-envelope-open-text mr-2"></i> Contact Teachers
+      </a>
+    </div>
+
+  </div>
+  

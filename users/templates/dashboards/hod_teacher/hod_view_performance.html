@@ -1,0 +1,12 @@
+{% extends "base/base_dashboard.html" %}
+{% load shared_filters %}
+{% load static %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-4">Performance Overview – {{ student.user.get_full_name }}</h2>
+{% include "dashboards/shared/includes/_student_vs_class_performance.html" %}
+{% endblock %}
+
+{% block extra_js %}
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}

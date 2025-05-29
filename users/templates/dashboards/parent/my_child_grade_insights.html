@@ -1,0 +1,16 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+
+{% block title %}
+Grade Insights | {{ student.user.get_full_name }}
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  {% include "dashboards/shared/includes/_view_grade_insights.html" %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}

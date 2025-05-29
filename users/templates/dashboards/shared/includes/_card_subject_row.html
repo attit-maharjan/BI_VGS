@@ -1,0 +1,16 @@
+{% load shared_filters %}
+
+<tr class="hover:bg-gray-50 transition">
+    <td class="px-4 py-2 text-gray-600 font-medium">
+        {{ counter }}
+    </td>
+    <td class="px-4 py-2 font-semibold text-gray-800">
+        {{ assignment.subject.name }}
+    </td>
+    <td class="px-4 py-2 text-gray-600">
+        {{ assignment.subject.department.name }}
+    </td>
+    <td class="px-4 py-2 text-indigo-600 font-mono text-sm">
+        {{ assignment.subject.code }}
+    </td>
+</tr>

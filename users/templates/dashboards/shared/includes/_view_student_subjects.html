@@ -1,0 +1,56 @@
+{# dashboards/shared/includes/_view_student_subjects.html #}
+{% load static %}
+<div class="space-y-8">
+  <!-- 🧭 Header Section -->
+  <div class="bg-white p-6 rounded-2xl shadow text-center">
+    <h2 class="text-2xl font-bold text-gray-800">Student Subject Overview</h2>
+    <p class="text-sm text-gray-500">Active subjects by {{ student.user.get_full_name }}</p>
+  </div>
+
+
+  <!-- 📌 Info Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bs-5 text-white p-4 rounded-xl shadow text-center">
+      <p class="text-sm font-medium">Academic Year</p>
+      <p class="text-lg font-semibold">{{ current_year.name }}</p>
+    </div>
+    <div class="bs-9 text-white p-4 rounded-xl shadow text-center">
+      <p class="text-sm font-medium">Student ID</p>
+      <p class="text-lg font-semibold">{{ student.student_id }}</p>
+    </div>
+    <div class="bs-12 text-white p-4 rounded-xl shadow text-center">
+      <p class="text-sm font-medium">Class Group</p>
+      <p class="text-lg font-semibold">{{ classgroup.name }}</p>
+    </div>
+  </div>
+
+  <!-- 📘 Subject Cards -->
+  {% if student_subjects %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+      {% for subject in student_subjects %}
+      <div class="rounded-2xl text-white shadow p-6 transition-all bs-{{ forloop.counter|add:"1" }}">
+
+          <div class="flex flex-col items-center space-y-3">
+            {% if subject.teacher_profile_image %}
+              <img src="{{ subject.teacher_profile_image }}" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow">
+            {% else %}
+              <img src="{% static 'profile_photos/default.png' %}" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow">
+            {% endif %}
+            <div class="text-center">
+              <p class="text-lg font-semibold">{{ subject.teacher_name }}</p>
+              <p class="text-sm">{{ subject.teacher_email }}</p>
+            </div>
+            <div class="text-center pt-2 border-t border-white/30">
+              <p class="text-sm font-medium">{{ subject.code }}</p>
+              <p class="text-base font-bold tracking-wide">{{ subject.name }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-12 text-gray-500">
+      <p>No subjects assigned yet.</p>
+    </div>
+  {% endif %}
+</div>

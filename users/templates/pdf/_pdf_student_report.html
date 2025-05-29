@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ student.user.get_full_name }} – Report Card</title>
+
+  <!-- 🧠 Favicon -->
+  {% if user.is_authenticated %}
+    {% if user.profile_image %}
+      <link rel="icon" href="{{ user.profile_image.url }}" type="image/png">
+    {% elif user.gender == 'male' %}
+      <link rel="icon" href="{% static 'users/default_images/man.png' %}" type="image/png">
+    {% elif user.gender == 'female' %}
+      <link rel="icon" href="{% static 'users/default_images/woman.png' %}" type="image/png">
+    {% elif user.school %}
+      <link rel="icon" href="{{ user.school.school_logo.url }}" type="image/png">
+    {% else %}
+      <link rel="icon" href="{% static 'logos/bivgs_logo.png' %}" type="image/png">
+    {% endif %}
+  {% else %}
+    <link rel="icon" href="{% static 'logos/bivgs_logo.png' %}" type="image/png">
+  {% endif %}
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <!-- Custom Tailwind Overrides -->
+  <link rel="stylesheet" href="{% static 'shared/css/bootstrap_overrides_for_tailwind.css' %}">
+
+  <style>
+    @page {
+      size: A4;
+      margin: 1.5cm;
+    }
+    @media print {
+      .page-break { page-break-before: always; }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-white text-gray-800 font-sans text-sm">
+  <!-- 🖨 Print Button -->
+  <div class="max-w-3xl mx-auto p-4 text-right no-print">
+    <button onclick="window.print()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+      <i class="fas fa-print mr-1"></i> Print / Save as PDF
+    </button>
+  </div>
+
+  <!-- Page 1 -->
+  <div class="max-w-3xl mx-auto p-6">
+    <div class="text-center border-b pb-4 mb-4">
+      <h1 class="text-3xl font-bold">{{ school_settings.school_name }}</h1>
+      <p class="text-sm">{{ school_settings.email_address }} | {{ school_settings.contact_number }} | {{ school_settings.website_url }} | {{ school_settings.address }}</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <div><strong>Full Name:</strong> {{ student.user.get_full_name }}</div>
+      <div><strong>Student ID:</strong> {{ student.student_id }}</div>
+      <div><strong>Class Group:</strong> {{ classgroup.name }}</div>
+      <div><strong>Class Teacher:</strong> {{ class_teacher_name }}</div>
+      <div><strong>Total Students:</strong> {{ student_count }}</div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4 mb-8">
+      <div class="bg-{{ average_grade_color }}-100 border-l-4 border-{{ average_grade_color }}-500 p-4 rounded">
+        <p class="text-xs font-medium text-gray-600">Average Grade</p>
+        <p class="text-lg font-bold">{{ average_grade }}</p>
+      </div>
+      <div class="bg-blue-100 border-l-4 border-blue-500 p-4 rounded">
+        <p class="text-xs font-medium text-gray-600">GPA</p>
+        <p class="text-lg font-bold">{{ gpa }}</p>
+      </div>
+      <div class="bg-green-100 border-l-4 border-green-500 p-4 rounded">
+        <p class="text-xs font-medium text-gray-600">Average Score</p>
+        <p class="text-lg font-bold">{{ average_score }}</p>
+      </div>
+    </div>
+
+    <!-- First Exam Only -->
+    <table class="w-full border border-gray-300 mb-4">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 text-left">Exam Code</th>
+          <th class="p-2 text-left">Title</th>
+          <th class="p-2 text-center">Score</th>
+          <th class="p-2 text-center">Grade</th>
+          <th class="p-2 text-left">Distribution</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exam in exam_data|slice:":1" %}
+        <tr class="border-t">
+          <td class="p-2 font-mono text-xs">{{ exam.exam_code }}</td>
+          <td class="p-2">{{ exam.exam.title }}</td>
+          <td class="p-2 text-center">{{ exam.mark.score }}</td>
+          <td class="p-2 text-center">{{ exam.mark.grade }}</td>
+          <td class="p-2">{{ exam.chart_html|safe }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Page 2 -->
+  <div class="page-break"></div>
+  <div class="max-w-3xl mx-auto p-6">
+    <table class="w-full border border-gray-300 mb-6">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 text-left">Exam Code</th>
+          <th class="p-2 text-left">Title</th>
+          <th class="p-2 text-center">Score</th>
+          <th class="p-2 text-center">Grade</th>
+          <th class="p-2 text-left">Distribution</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exam in exam_data|slice:"1:3" %}
+        <tr class="border-t">
+          <td class="p-2 font-mono text-xs">{{ exam.exam_code }}</td>
+          <td class="p-2">{{ exam.exam.title }}</td>
+          <td class="p-2 text-center">{{ exam.mark.score }}</td>
+          <td class="p-2 text-center">{{ exam.mark.grade }}</td>
+          <td class="p-2">{{ exam.chart_html|safe }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Page 3 -->
+  <div class="page-break"></div>
+  <div class="max-w-3xl mx-auto p-6">
+    <table class="w-full border border-gray-300 mb-6">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 text-left">Exam Code</th>
+          <th class="p-2 text-left">Title</th>
+          <th class="p-2 text-center">Score</th>
+          <th class="p-2 text-center">Grade</th>
+          <th class="p-2 text-left">Distribution</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for exam in exam_data|slice:"3:" %}
+        <tr class="border-t">
+          <td class="p-2 font-mono text-xs">{{ exam.exam_code }}</td>
+          <td class="p-2">{{ exam.exam.title }}</td>
+          <td class="p-2 text-center">{{ exam.mark.score }}</td>
+          <td class="p-2 text-center">{{ exam.mark.grade }}</td>
+          <td class="p-2">{{ exam.chart_html|safe }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="text-sm text-right mt-6 border-t pt-2">
+      <p><i class="fas fa-chalkboard-teacher mr-1"></i>Class Teacher: {{ class_teacher_name }}</p>
+      <p><i class="fas fa-calendar-alt mr-1"></i>Date Generated: {% now "jS F Y" %}</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
+
+{#
+  users > templates > dashboards > classroom_teacher > classroom_teacher_view_subject_performance.html
+  Renders subject performance analytics using role-aware context.
+  Designed with clean Tailwind layout and your CSS overrides in mind.
+#}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-10">
+  <h2 class="text-2xl font-bold mb-6 border-b pb-2 tracking-tight">Subject Performance Summary</h2>
+
+  {% if subject_performance_analytics %}
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      {% for item in subject_performance_analytics %}
+      <div class="bg-white shadow rounded-2xl p-5 border border-gray-200">
+        <table class="w-full text-sm mb-4">
+          <thead class="{{ ''|random_bs_color }} text-white uppercase text-sm font-semibold tracking-wide">
+            <tr>
+              <th colspan="2" class="text-left text-lg font-semibold pb-2 bs-td-padding rounded-tl-lg rounded-tr-lg">{{ item.subject.name }}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr class="bg-gray-100"><td class="py-1 font-medium bs-td-padding">Subject Teacher</td><td class="text-right bs-td-padding">{{ item.subject_teacher }}</td></tr>
+            <tr><td class="py-1 font-medium bs-td-padding">Class Groups</td><td class="text-right bs-td-padding">{{ item.class_groups|join:", " }}</td></tr>
+            <tr class="bg-gray-50"><td class="py-1 font-medium bs-td-padding">Average Score</td><td class="text-right bs-td-padding">{{ item.average_score }}</td></tr>
+            <tr><td class="py-1 font-medium bs-td-padding">Highest Score</td><td class="text-right bs-td-padding">{{ item.highest_score }}</td></tr>
+            <tr><td class="py-1 font-medium bs-td-padding">Lowest Score</td><td class="text-right bs-td-padding">{{ item.lowest_score }}</td></tr>
+            <tr><td class="py-1 font-medium bs-td-padding">Pass Rate</td><td class="text-right bs-td-padding">{{ item.pass_rate }}%</td></tr>
+            <tr><td class="py-1 font-medium bs-td-padding">Std Deviation</td><td class="text-right bs-td-padding">{{ item.std_deviation }}</td></tr>
+            <tr><td class="py-1 font-medium bs-td-padding">Exam Count</td><td class="text-right bs-td-padding">{{ item.exam_count }}</td></tr>
+            <tr><td class="py-1 font-medium bs-td-padding">Last Exam</td><td class="text-right bs-td-padding">{{ item.last_exam_date|date:"M j, Y" }}</td></tr>
+          </tbody>
+        </table>
+
+        {% if item.grade_distribution %}
+        <div class="mt-4">
+          <p class="text-sm font-medium text-gray-600 mb-1">Grade Distribution:</p>
+          <div class="flex flex-wrap gap-2 text-xs">
+            {% for grade, count in item.grade_distribution.items %}
+            <span class="rounded-full px-3 py-1 text-white {{ grade|grade_to_color }} font-bold">
+                {{ grade }}: {{ count }}
+            </span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-gray-500 italic text-sm mt-4">No subject performance data available at the moment.</div>
+  {% endif %}
+</div>
+{% endblock %}

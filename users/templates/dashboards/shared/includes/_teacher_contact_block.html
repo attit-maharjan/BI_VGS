@@ -1,0 +1,109 @@
+{% load shared_filters %}
+<div class="bg-white p-6 rounded-xl shadow space-y-6">
+  <!-- 🗓 Academic Year Display -->
+  <div class="text-center border-b pb-4">
+    <h2 class="text-2xl font-bold text-bs-5">Contact Teachers</h2>
+    <p class="text-gray-500 text-sm italic">Academic Year: <strong>{{ classgroup.academic_year.name }}</strong></p>
+  </div>
+
+  <!-- 🏫 School Contact & Leadership -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="border border-bs-5 p-4 rounded-lg shadow-sm">
+      <h3 class="text-lg font-semibold text-bs-5 mb-2">School Contact</h3>
+      <p class="text-sm text-gray-600">Email: <a href="mailto:{{ school_email }}" class="text-bs-5">{{ school_email }}</a></p>
+      <p class="text-sm text-gray-600">Phone: <span class="text-bs-5">{{ school_phone }}</span></p>
+    </div>
+    <div class="border border-bs-6 p-4 rounded-lg shadow-sm">
+      <h3 class="text-lg font-semibold text-bs-6 mb-2">Leadership</h3>
+      <p class="text-sm text-gray-600">Principal: <strong>{{ principal_name }}</strong> — <a href="mailto:{{ principal_email }}" class="text-bs-6">{{ principal_email }}</a></p>
+      <p class="text-sm text-gray-600">Vice Principal: <strong>{{ vice_principal_name }}</strong> — <a href="mailto:{{ vice_principal_email }}" class="text-bs-6">{{ vice_principal_email }}</a></p>
+    </div>
+  </div>
+
+  <!-- 👤 Student & 🧑‍🏫 Classroom Teacher Info Side-by-Side -->
+  {% if classroom_teacher %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+      <!-- Student -->
+      <div class="border border-bs-13 p-4 rounded-lg shadow-sm">
+        <h3 class="text-lg font-semibold text-bs-13 mb-2">Student</h3>
+        <div class="flex items-center gap-4">
+          <img src="{{ student.user.profile_image.url }}" class="w-16 h-16 rounded-full object-cover ring-2 ring-bs-13" />
+          <div>
+            <p class="font-semibold">{{ student.user.get_full_name }}</p>
+            <p class="text-sm text-gray-500">ID: {{ student.student_id }}</p>
+            <p class="text-sm text-gray-500">{{ student.user.email }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classroom Teacher -->
+      <div class="border border-bs-11 p-4 rounded-lg shadow-sm">
+        <h3 class="text-lg font-semibold text-bs-11 mb-2">Classroom Teacher</h3>
+        <div class="flex items-center gap-4">
+          <img src="{{ classroom_teacher.user.profile_image.url }}" class="w-16 h-16 rounded-full object-cover ring-2 ring-bs-11" />
+          <div>
+            <p class="font-semibold">{{ classroom_teacher.user.get_full_name }}</p>
+            <p class="text-sm text-gray-500">Class Group: {{ classgroup.name }}</p>
+            <p class="text-sm text-gray-500">
+              <a href="mailto:{{ classroom_teacher.user.email }}" class="text-bs-11">{{ classroom_teacher.user.email }}</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- 🏛 Department Heads Table -->
+  {% if hods %}
+    <div class="overflow-hidden rounded-md border border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-800 mb-2 mt-6 px-4">Department Heads</h3>
+      <table class="min-w-full text-left">
+        <thead class="bs-3 text-white">
+          <tr>
+            <th class="p-2 align-top text-sm w-1/4">Name</th>
+            <th class="p-2 align-top text-sm w-1/2">Department</th>
+            <th class="p-2 align-top text-sm w-1/4">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for hod in hods %}
+            <tr class="border-t hover:bg-gray-50">
+              <td class="p-2 break-words whitespace-normal text-sm font-semibold">{{ hod.name }}</td>
+              <td class="p-2 break-words whitespace-normal text-sm">{{ hod.department }}</td>
+              <td class="p-2 break-words whitespace-normal text-sm">
+                <a href="mailto:{{ hod.email }}" class="text-bs-9">{{ hod.email }}</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+
+  <!-- 📚 Subject Teachers Table -->
+  {% if subject_teachers %}
+    <div class="overflow-hidden rounded-md border border-gray-200">
+      <h3 class="text-lg font-semibold text-gray-800 mb-2 mt-6 px-4">Subject Teachers</h3>
+      <table class="min-w-full text-left">
+        <thead class="bs-10 text-white">
+          <tr>
+            <th class="p-2 align-top text-sm w-1/4">Name</th>
+            <th class="p-2 align-top text-sm w-1/2">Subject(s)</th>
+            <th class="p-2 align-top text-sm w-1/4">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for teacher in subject_teachers %}
+            <tr class="border-t hover:bg-gray-50">
+              <td class="p-2 break-words whitespace-normal text-sm font-semibold">{{ teacher.name }}</td>
+              <td class="p-2 break-words whitespace-normal text-sm">{{ teacher.subjects|join:", " }}</td>
+              <td class="p-2 break-words whitespace-normal text-sm">
+                <a href="mailto:{{ teacher.email }}" class="text-bs-13">{{ teacher.email }}</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+</div>

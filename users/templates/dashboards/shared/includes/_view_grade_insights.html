@@ -1,0 +1,62 @@
+{% load static %}
+{% load shared_filters %}
+
+<div class="space-y-8">
+  <!-- 🧭 Title -->
+  <div class="bg-white p-6 rounded-2xl shadow text-center">
+    <h2 class="text-2xl font-bold text-gray-800">Grade Distribution & Performance Insights</h2>
+    <p class="text-sm text-gray-500">Student: {{ student.user.get_full_name }}</p>
+  </div>
+
+  <!-- 📌 Academic Info Row -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bs-5 text-white p-4 rounded-xl shadow text-center">
+      <p class="text-sm font-medium">Academic Year</p>
+      <p class="text-lg font-semibold">{{ current_year.name }}</p>
+    </div>
+    <div class="bs-9 text-white p-4 rounded-xl shadow text-center">
+      <p class="text-sm font-medium">Class Group</p>
+      <p class="text-lg font-semibold">{{ classgroup.name }}</p>
+    </div>
+    <div class="bs-3 text-white p-4 rounded-xl shadow text-center">
+      <p class="text-sm font-medium">Number of Students</p>
+      <p class="text-lg font-semibold">{{ student_count }}</p>
+    </div>
+    <div class="bs-12 text-white p-4 rounded-xl shadow text-center">
+      <p class="text-sm font-medium">Class Teacher</p>
+      <p class="text-lg font-semibold">{{ class_teacher_name }}</p>
+    </div>
+  </div>
+
+<!-- 📊 GPA Insights Row -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="bg-white p-4 rounded-xl shadow text-center">
+      <p class="text-base font-semibold text-gray-700 uppercase tracking-wide">Average Grade</p>
+      <div class="inline-block px-3 py-1 text-2xl font-bold text-white rounded-lg {{ average_score|score_to_color }}">
+        {{ average_grade }}
+      </div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow text-center">
+      <p class="text-base font-semibold text-gray-700 uppercase tracking-wide">GPA</p>
+      <div class="inline-block px-3 py-1 text-2xl font-bold text-white rounded-lg {{ average_score|score_to_color }}">
+        {{ gpa }}
+      </div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow text-center">
+      <p class="text-base font-semibold text-gray-700 uppercase tracking-wide">Average Score</p>
+      <div class="inline-block px-3 py-1 text-2xl font-bold text-white rounded-lg {{ average_score|score_to_color }}">
+        {{ average_score }}%
+      </div>
+    </div>
+  </div>
+  
+
+<!-- 📈 Bar Charts Per Exam in a responsive grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  {% for chart_html in grade_distribution_charts %}
+    <div class="bg-white p-6 rounded-2xl shadow">
+      {{ chart_html|safe }}
+    </div>
+  {% endfor %}
+</div>
+

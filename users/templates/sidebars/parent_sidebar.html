@@ -1,0 +1,45 @@
+
+{% if student %}
+<!-- 🧒 Child Academic Overview -->
+<p class="text-xs uppercase text-teal-200 pt-4">Academic Overview</p>
+<div class="space-y-2 mt-2">
+    <a href="{% url 'users:parent_child_subjects' student.id %}" class="block px-3 py-2 rounded bs-parent-btn transition">
+        <i class="fas fa-book mr-2"></i> Subjects
+    </a>
+    <a href="{% url 'users:parent_child_exam_results' student.id %}" class="block px-3 py-2 rounded bs-parent-btn transition">
+        <i class="fas fa-pen-alt mr-2"></i> Exam Results
+    </a>
+    <a href="{% url 'users:parent_child_exam_timetable' student.id %}" class="block px-3 py-2 rounded bs-parent-btn transition">
+        <i class="fas fa-calendar-alt mr-2"></i> Exam Timetable
+    </a>
+</div>
+
+<!-- 📈 Progress Reports -->
+<p class="text-xs uppercase text-teal-200 pt-6">Progress Reports</p>
+<div class="space-y-2 mt-2">
+    <a href="{% url 'users:parent_child_performance' student_id=student.id %}" class="block px-3 py-2 rounded bs-parent-btn transition">
+        <i class="fas fa-chart-line mr-2"></i> Performance
+    </a>
+    <a href="{% url 'users:parent_child_grade_insights' student.id %}" class="block px-3 py-2 rounded bs-parent-btn transition">
+        <i class="fas fa-chart-pie mr-2"></i> Grade Insights
+    </a>
+    <a href="{% url 'users:my_child_report_card' student.id %}" class="block px-3 py-2 rounded bs-parent-btn transition">
+        <i class="fas fa-file-alt mr-2"></i> view Report Card
+    </a>
+    <a href="{% url 'users:parent_subject_comments' student_id=student.id %}" class="block px-3 py-2 rounded bs-parent-btn transition">
+        <i class="fas fa-comments mr-2"></i> Subject Comments
+    </a>
+    <a href="{% url 'users:parent_printable_report_card' student.id %}" target="_blank" class="block px-3 py-2 rounded bs-parent-btn transition no-print">
+        <i class="fas fa-download mr-2"></i> Report Card (PDF)
+      </a>
+      
+</div>
+
+<!-- 👩‍🏫 Teacher Communication -->
+<p class="text-xs uppercase text-teal-200 pt-6">Teacher Contact</p>
+<div class="space-y-2 mt-2 pb-8">
+    <a href="{% url 'users:parent_teacher_contacts' student_id=student.id %}" class="block px-3 py-2 rounded bs-parent-btn transition">
+        <i class="fas fa-envelope-open-text mr-2"></i> Contact Teachers
+    </a>
+</div>
+{% endif %}

@@ -1,0 +1,98 @@
+{% load static %}
+{% load shared_filters %}
+
+<div class="bg-white shadow rounded-xl p-6 font-sans text-gray-800">
+    <!-- School Header -->
+    <div class="text-center mb-4 border-b pb-2">
+      <h1 class="text-2xl font-bold">{{ school_settings.school_name }}</h1>
+      <p class="text-sm">{{ school_settings.email_address }} | {{ school_settings.contact_number }} | {{ school_settings.website_url }} | {{ school_settings.address }}</p>
+    </div>
+    
+    <!-- Student Info -->
+    <div class="grid grid-cols-2 gap-4 text-sm mb-6">
+      <div><i class="fas fa-user mr-1"></i><strong>Full Name:</strong> {{ student.user.get_full_name }}</div>
+      <div><i class="fas fa-id-badge mr-1"></i><strong>Student ID:</strong> {{ student.student_id }}</div>
+      <div><i class="fas fa-users mr-1"></i><strong>Class Group:</strong> {{ classgroup.name }}</div>
+      <div><i class="fas fa-chalkboard-teacher mr-1"></i><strong>Class Teacher:</strong> {{ class_teacher_name }}</div>
+      <div><i class="fas fa-user-friends mr-1"></i><strong>Total Students:</strong> {{ student_count }}</div>
+    </div>
+  
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="bg-{{ average_grade_color }}-100 border-l-4 border-{{ average_grade_color }}-500 p-4 rounded">
+        <p class="text-sm font-bold text-gray-600 px3">Average Grade</p>
+        <div class="inline-block px-3 py-1 text-lg font-bold text-white rounded-lg {{ average_score|score_to_color }}">
+          {{ average_grade }}
+        </div>
+      </div>
+      <div class="bg-blue-100 border-l-4 border-blue-500 p-4 rounded">
+        <p class="text-sm font-bold text-gray-600 px3">GPA</p>
+        <div class="inline-block px-3 py-1 text-lg font-bold text-white rounded-lg {{ average_score|score_to_color }}">
+          {{ gpa }}
+        </div>
+      </div>
+      <div class="bg-green-100 border-l-4 border-green-500 p-4 rounded">
+        <p class="text-sm font-bold text-gray-600 px3">Average Score</p>
+        <div class="inline-block px-3 py-1 text-lg font-bold text-white rounded-lg {{ average_score|score_to_color }}">
+          {{ average_score }}
+        </div>
+      </div>
+    </div>
+  
+    <!-- Exam Results Table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm border">
+        <thead class="bg-gray-100 text-left">
+          <tr>
+            <th class="p-2">Exam Code</th>
+            <th class="p-2">Title</th>
+            <th class="p-2">Score</th>
+            <th class="p-2">Grade</th>
+            <th class="p-2">Distribution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for exam in exam_data %}
+          <tr class="border-t">
+            <td class="p-2 font-mono text-xs">{{ exam.exam_code }}</td>
+            <td class="p-2">{{ exam.exam.title }}</td>
+            <td class="p-2 text-center">
+                <span class="text-white font-semibold px-3 py-1 rounded-lg inline-block
+                  {% if exam.mark.grade == "A" %} bs-5
+                  {% elif exam.mark.grade == "B" %} bs-2
+                  {% elif exam.mark.grade == "C" %} bs-9
+                  {% elif exam.mark.grade == "D" %} bs-12
+                  {% elif exam.mark.grade == "E" %} bs-13
+                  {% else %} bs-14
+                  {% endif %}">
+                  {{ exam.mark.score }}
+                </span>
+            </td>   
+
+            <td class="p-2 text-center">
+                <span class="text-white font-semibold px-3 py-1 rounded-lg inline-block
+                  {% if exam.mark.grade == "A" %} bs-5
+                  {% elif exam.mark.grade == "B" %} bs-2
+                  {% elif exam.mark.grade == "C" %} bs-9
+                  {% elif exam.mark.grade == "D" %} bs-12
+                  {% elif exam.mark.grade == "E" %} bs-13
+                  {% else %} bs-14
+                  {% endif %}">
+                  {{ exam.mark.grade }}
+                </span>
+            </td>   
+
+            <td class="p-2">{{ exam.chart_html|safe }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Footer -->
+    <div class="text-sm text-right mt-6 border-t pt-2">
+      <p><i class="fas fa-chalkboard-teacher mr-1"></i>Class Teacher: {{ class_teacher_name }}</p>
+      <p><i class="fas fa-calendar-alt mr-1"></i>Date Generated: {% now "jS F Y" %}</p>
+    </div>
+  </div>
+  

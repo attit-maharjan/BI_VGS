@@ -1,0 +1,35 @@
+{% load shared_filters %}
+
+<div class="bg-white rounded-2xl shadow p-4 flex flex-col items-center text-center">
+  
+  <!-- 🖼️ Profile Image -->
+  <img src="{{ student.user.profile_image.url }}" 
+       alt="{{ student.user.get_full_name }}" 
+       class="w-24 h-24 rounded-full object-cover mb-2">
+
+  <!-- 👤 Name & ID -->
+  <h3 class="text-lg font-semibold">{{ student.user.get_full_name }}</h3>
+  <p class="text-sm text-gray-500">ID: {{ student.student_id }}</p>
+
+  <!-- 🧬 Meta -->
+  <p class="text-sm">Gender: {{ student.user.gender|default:"N/A"|capfirst }}</p>
+  <p class="text-sm">Class Group: {{ student.class_group.name|default:"N/A" }}</p>
+
+  <hr class="my-2 border-t border-gray-200 w-full">
+
+  <!-- 📈 Performance -->
+  <!-- 🎖️ Status Badge -->
+    <div class="text-sm font-medium px-3 py-1 rounded text-white inline-block {{ student.avg_score|score_to_color }}">
+    Status: {{ student.status_label }}
+    </div>
+
+
+<!-- 🔗 Dashboard Button with Role-Based Class -->
+<a href="{% student_dashboard_url student %}" 
+   class="mt-3 inline-flex items-center gap-2 text-sm font-medium shadow-sm transition duration-150 ease-in-out {% role_button_class %}">
+   <i class="fas fa-gauge"></i> View Dashboard
+</a>
+
+
+
+</div>
