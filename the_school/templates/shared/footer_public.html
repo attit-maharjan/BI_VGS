@@ -4,7 +4,9 @@
         <div class="row g-4">
             <!-- About Us -->
             <div class="col-lg-4 col-md-6">
-                <h5 class="mb-4"><i class="fas fa-certificate me-2"></i>Licensed to:</h5>
+                <h5 class="mb-4">
+                    <i class="fas fa-certificate me-2"></i>Licensed to:
+                </h5>
                 <p class="mb-4">
                     <i class="fas fa-school me-2"></i>{{ school_settings.school_name|default:"BIVGS" }}
                 </p>
@@ -12,7 +14,7 @@
                     <i class="fas fa-copyright me-2"></i>&copy; {{ school_settings.established_year|default:2025 }}. All rights reserved.
                 </p>
             </div>
-
+        
             <!-- Quick Links -->
             <div class="col-lg-2 col-md-6">
                 <h5 class="mb-4"><i class="fas fa-link me-2"></i>Quick Links</h5>
@@ -21,7 +23,7 @@
                     <li class="mb-2"><a href="{% url 'the_school:contact' %}" class="public-footer-link"><i class="fas fa-envelope me-2"></i>Contact</a></li>
                 </ul>
             </div>
-
+        
             <!-- Info Hub -->
             <div class="col-lg-2 col-md-6">
                 <h5 class="mb-4"><i class="fas fa-info-circle me-2"></i>Info Hub</h5>
@@ -31,82 +33,83 @@
                     <li class="mb-2"><a href="{% url 'the_school:terms_of_service' %}" class="public-footer-link"><i class="fas fa-file-contract me-2"></i>Terms of Service</a></li>
                 </ul>
             </div>
-
+        
             <!-- Contact Info -->
             <div class="col-lg-4 col-md-6">
                 <h5 class="mb-4"><i class="fas fa-info-circle me-2"></i>Contact Info</h5>
                 <ul class="list-unstyled">
                     <li class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>{{ school_settings.address|default:"123 Business Street, City, Country" }}</li>
-                    <li class="mb-3">
-                        <i class="fas fa-phone me-2"></i>
-                        <a href="tel:{{ school_settings.contact_number }}" class="public-footer-link">{{ school_settings.contact_number|default:"+1 (234) 567-890" }}</a>
-                    </li>
-                    <li class="mb-3">
-                        <i class="fas fa-envelope me-2"></i>
-                        <a href="mailto:{{ school_settings.email_address }}" class="public-footer-link">{{ school_settings.email_address|default:"contact@example.com" }}</a>
-                    </li>
+                    <li class="mb-3"><i class="fas fa-phone me-2"></i><a href="tel:{{ school_settings.contact_number }}" class="public-footer-link">{{ school_settings.contact_number|default:"+1 (234) 567-890" }}</a></li>
+                    <li class="mb-3"><i class="fas fa-envelope me-2"></i><a href="mailto:{{ school_settings.email_address }}" class="public-footer-link">{{ school_settings.email_address|default:"contact@example.com" }}</a></li>
                 </ul>
             </div>
         </div>
-
-        <!-- Social Media -->
-        {% if school_settings.social_media_links %}
-            <div class="row mt-4">
-                <hr class="mb-4">
-                <div class="col-12 text-center">
-                    <h5 class="mb-4"><i class="fas fa-share-alt me-2"></i>Follow Us</h5>
-                    <div class="public-social-links">
+        
+        <!-- Social Media Links Section -->
+        <div class="row mt-4">
+            <hr class="mb-4">
+            <div class="col-12 text-center"> <!-- Add text-center here -->
+                <h5 class="mb-4"><i class="fas fa-share-alt me-2"></i>Follow Us</h5>
+                <div class="public-social-links">
+                    {% if school_settings.social_media_links %}
                         {% for platform, url in school_settings.social_media_links.items %}
-                            <a href="{{ url }}" target="_blank" class="public-social-icon mx-2 
-                                {% if platform == 'Facebook' %}bg-primary
-                                {% elif platform == 'Twitter' %}bg-info
-                                {% elif platform == 'Instagram' %}bg-danger
-                                {% elif platform == 'LinkedIn' %}bg-primary
-                                {% endif %}">
+                            <a href="{{ url }}" target="_blank" class="public-social-icon {% if platform == 'Facebook' %}bg-primary{% elif platform == 'Twitter' %}bg-info{% elif platform == 'Instagram' %}bg-danger{% elif platform == 'LinkedIn' %}bg-primary{% endif %} mx-2">
                                 <i class="fab fa-{{ platform|lower }}"></i>
                             </a>
                         {% endfor %}
-                    </div>
+                    {% endif %}
                 </div>
             </div>
-        {% endif %}
+        </div>
 
-        <!-- Accreditation -->
+        
+
+        <!-- Footer bottom row -->
+
+        <!-- Accreditation Section -->
         <div class="row mt-5 public-accreditation-section">
             <div class="col-12">
-                <h5 class="mb-4 public-footer-section-title"><i class="fas fa-award me-2"></i>Our Accreditors</h5>
+                <h5 class="mb-4 public-footer-section-title">
+                    <i class="fas fa-award me-2"></i>Our Accreditors
+                </h5>
+
                 {% if accreditation_details %}
                     <div class="table-responsive">
                         <table class="table table-sm table-bordered table-hover text-light mb-0">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Registration No.</th>
-                                    <th>Website</th>
-                                    <th>Accreditation Date</th>
-                                    <th>Status</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Registration No.</th>
+                                    <th scope="col">Website</th>
+                                    <th scope="col">Accreditation Date</th>
+                                    <th scope="col">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for accreditor in accreditation_details %}
                                     <tr>
-                                        <td>{{ accreditor.name }}</td>
-                                        <td>{{ accreditor.registration_number }}</td>
-                                        <td>
+                                        <td class="align-middle">{{ accreditor.name }}</td>
+                                        <td class="align-middle">{{ accreditor.registration_number }}</td>
+                                        <td class="align-middle">
                                             {% if accreditor.website %}
-                                                <a href="{{ accreditor.website }}" target="_blank" class="text-info" data-bs-toggle="tooltip" title="Visit Website">
+                                                <a href="{{ accreditor.website }}" target="_blank" class="text-info"
+                                                data-bs-toggle="tooltip" data-bs-placement="top" title="Visit Website">
                                                     <i class="fas fa-up-right-from-square fa-lg"></i>
                                                 </a>
                                             {% else %}
                                                 <span class="text-muted fst-italic">N/A</span>
                                             {% endif %}
                                         </td>
-                                        <td>{{ accreditor.accreditation_date|date:"F d, Y" }}</td>
-                                        <td>
+                                        <td class="align-middle">{{ accreditor.accreditation_date|date:"F d, Y" }}</td>
+                                        <td class="align-middle">
                                             <span class="badge rounded-pill
-                                                {% if accreditor.status == 'Active' %}bg-success
-                                                {% elif accreditor.status == 'Pending' %}bg-warning text-dark
-                                                {% else %}bg-danger{% endif %}">
+                                                {% if accreditor.status == 'Active' %}
+                                                    bg-success
+                                                {% elif accreditor.status == 'Pending' %}
+                                                    bg-warning text-dark
+                                                {% else %}
+                                                    bg-danger
+                                                {% endif %}">
                                                 {{ accreditor.status }}
                                             </span>
                                         </td>
@@ -121,7 +124,11 @@
             </div>
         </div>
 
-        <!-- Footer Bottom -->
+
+
+
+
+
         <div class="row mt-5">
             <div class="col-12">
                 <hr class="mb-4">
@@ -143,3 +150,5 @@
         </div>
     </div>
 </footer>
+
+

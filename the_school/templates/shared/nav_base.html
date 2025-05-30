@@ -1,40 +1,22 @@
 {% load static %}
-<!-- This is our amazing navbar that will totally work -->
-<nav class="navbar navbar-lg navbar-light bg-danger text-light fixed-sticky shadow-lg p-0 m-0" style="height: 150px;">
-  <div class="container-sm-fluid">
-    <!-- Brand and Logo section -->
-    <a class="navbar-brand text-center d-block w-100 fs-1 fw-bolder text-decoration-underline" href="{% url 'the_school:index' %}">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top public-navbar-blur">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center public-navbar-brand" href="{% url 'the_school:index' %}">
       {% if school_settings.school_logo %}
-        <!-- Logo should show here I think -->
-        <img src="{{ school_settings.school_logo.url }}" alt="school_logo" class="img-thumbnail img-responsive rounded-circle border border-5 border-warning" width="120" height="90">
+        <img src="{{ school_settings.school_logo.url }}" alt="School Logo" class="img-fluid rounded">
       {% else %}
-        <!-- Just showing the school name if no logo -->
-        <span class="fst-italic bg-light text-dark p-2 rounded-pill">{{ school_settings.school_name|default:"BIVGS" }}</span>
+        {{ school_settings.school_name|default:"BIVGS" }}
       {% endif %}
     </a>
 
-    <!-- This is the hamburger button I copied from the docs -->
-    <button class="navbar-toggle btn btn-outline-warning btn-sm float-end mt-2" type="button"
-            data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
-            aria-expanded="yes" aria-label="Menu button">
-      <span class="navbar-toggler-icon bg-dark text-light">|||</span>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Links should probably go here -->
-    <div class="collapse navbar-collapse show bg-white border border-3 border-success" id="navbarNav">
-      <ul class="navbar-nav ms-end me-auto my-3 d-block text-center">
-        {% block navbar_links %}
-        <!-- I'll add links later maybe -->
-        <li class="nav-item p-2 bg-light border-bottom border-3 border-danger">
-          <a class="nav-link active text-primary text-decoration-line-through" href="#">Home??</a>
-        </li>
-        <li class="nav-item p-2">
-          <a class="nav-link text-muted bg-warning rounded-pill px-4 fw-light" href="#">About Us</a>
-        </li>
-        <li class="nav-item text-danger fw-bolder text-decoration-underline">
-          <a class="nav-link disabled" href="#">Contact (no)</a>
-        </li>
-        {% endblock %}
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        {% block navbar_links %}{% endblock %}
       </ul>
     </div>
   </div>

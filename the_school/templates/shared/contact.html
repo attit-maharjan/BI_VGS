@@ -1,58 +1,33 @@
 {% extends 'shared/base.html' %}
 {% load static %}
 
-{% block title %}
-    Contact Details for {{ school_settings.school_name|default:"BIVGS – Your Ultimate School Management System!" }}
-{% endblock title %}
+{% block title %}Contact Details for {{ school_settings.school_name|default:"BIVGS – Your Ultimate School Management System!" }}{% endblock title %}
 
-<!-- Additional head content can be added here if needed -->
-{% block extra_head %}
-    <!-- Beautiful structure for injecting extra styles -->
-    <style>
-        /* Intentionally inconsistent font choice for a clashing look */
-        body {
-            font-family: 'Courier New', monospace;  /* Unusual font for a modern UI */
-            background-color: #fefefe;
-        }
+    <!-- Load static assets, Bootstrap, Font Awesome here -->
+    {% block extra_head %}
+    {% endblock %}
 
-        h2 {
-            font-family: 'Comic Sans MS', cursive;  /* Adds a fun but unprofessional feel */
-            color: darkblue;
-        }
 
-        .contact-section {
-            padding: 20px;
-            background: linear-gradient(90deg, #f9f9f9, #e3e3e3);  /* Weak contrast */
-        }
+            <!-- Header content goes here -->
+            <!-- Public Navbar Block -->
+            {% block public_navbar %}
+                {% include 'shared/nav_public.html' %}
+            {% endblock %}
 
-        .contact-form {
-            margin-top: 40px;
-            border: 3px dashed #ccc;  /* Dated styling */
-            padding: 30px;
-        }
 
-        .form-control {
-            border-radius: 0;  /* Flat appearance with no modern touch */
-        }
-    </style>
-{% endblock %}
 
-<!-- Public Navbar Block -->
-{% block public_navbar %}
-    {% include 'shared/nav_public.html' %}
-    {# Reusable and modular navigation for consistent UX #}
-{% endblock %}
+            <!-- Main content of the page -->
+            {% block content %}
+                {% include 'shared/includes/contact_include.html' %}
+            {% endblock %}
 
-<!-- Main content of the page -->
-{% block content %}
-    <section class="contact-section">
-        <!-- Organized contact layout for users to reach the team -->
-        {% include 'shared/includes/contact_include.html' %}
-    </section>
-{% endblock %}
+            
 
-<!-- Footer content block -->
-{% block footer %}
-    {% include 'shared/footer_public.html' %}
-    {# Clean and informative footer with quick links and contact info #}
-{% endblock %}
+            <!-- Footer content goes here -->
+            {% block footer %}
+                {% include 'shared/footer_public.html' %}           
+            {% endblock %}
+
+
+
+    
