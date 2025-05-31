@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'the_school.apps.TheSchoolConfig',      
     'enrollments.apps.EnrollmentsConfig',   
     'exams.apps.ExamsConfig',                
-    'messaging.apps.MessagingConfig',
-    
+        
     
 ]
 
