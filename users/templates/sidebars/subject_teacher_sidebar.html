@@ -1,18 +1,29 @@
 <!-- 📚 Subject Tools -->
 <p class="text-xs uppercase text-emerald-200 pt-4">Subject Management</p>
 <div class="space-y-2 mt-2">
-    <a href="#" class="block px-3 py-2 rounded bs-subject-teacher-btn transition">
-        <i class="fas fa-book-reader mr-2"></i> Assigned Subjects
-    </a>
-    <a href="#" class="block px-3 py-2 rounded bs-subject-teacher-btn transition">
-        <i class="fas fa-file-signature mr-2"></i> Mark Exams
-    </a>
-    <a href="{% url 'users:subject_teacher_view_subject_performance' %}" 
-       class="block px-3 py-2 rounded bs-subject-teacher-btn transition">
-        <i class="fas fa-chart-bar mr-2"></i> Subject Performance
-    </a>
-    <a href="{% url 'users:subject_students' %}" 
-       class="block px-3 py-2 rounded bs-subject-teacher-btn transition">
-        <i class="fas fa-user-graduate mr-2"></i> My Students
-    </a>
+
+  <!-- 📝 Always visible -->
+  <a href="{% url 'users:update_exam_marks' 0 %}" 
+     class="block px-3 py-2 rounded bs-subject-teacher-btn transition">
+    <i class="fas fa-book-reader mr-2"></i> Update Exam Marks
+  </a>
+
+  <!-- 📈 Subject Performance -->
+  <a href="{% url 'users:subject_teacher_view_subject_performance' %}" 
+     class="block px-3 py-2 rounded bs-subject-teacher-btn transition">
+    <i class="fas fa-chart-bar mr-2"></i> Subject Performance
+  </a>
+
+  <!-- 👩‍🎓 My Students -->
+  <a href="{% url 'users:subject_students' %}" 
+     class="block px-3 py-2 rounded bs-subject-teacher-btn transition">
+    <i class="fas fa-user-graduate mr-2"></i> My Students
+  </a>
+
+  <!-- 📊 Performance Charts -->
+  <a href="{% url 'users:subject_teacher_view_charts' %}" 
+     class="block px-3 py-2 rounded bs-subject-teacher-btn transition">
+    <i class="fas fa-chart-line mr-2"></i> Performance Charts
+  </a>
+
 </div>

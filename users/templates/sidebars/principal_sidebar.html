@@ -1,29 +1,13 @@
-<!-- 🏫 School Overview -->
-<p class="text-xs uppercase text-indigo-200 pt-4">School Management</p>
-<div class="space-y-2 mt-2">
-    <a href="#" class="block px-3 py-2 rounded bs-principal-btn transition">
-        <i class="fas fa-users mr-2"></i> Staff Overview
-    </a>
-    <a href="{% url 'users:principal_students' %}" class="block px-3 py-2 rounded bs-principal-btn transition">
-        <i class="fas fa-user-graduate mr-2"></i> All Students
-    </a>
-</div>
-
-<!-- 📚 Academic Planning -->
-<p class="text-xs uppercase text-indigo-200 pt-6">Academics</p>
-<div class="space-y-2 mt-2">
-    <a href="#" class="block px-3 py-2 rounded bs-principal-btn transition">
-        <i class="fas fa-book-open mr-2"></i> Curriculum Review
-    </a>
-    <a href="#" class="block px-3 py-2 rounded bs-principal-btn transition">
-        <i class="fas fa-calendar-day mr-2"></i> Exams Scheduling
-    </a>
-</div>
-
 <!-- 📊 Performance Monitoring -->
 <p class="text-xs uppercase text-purple-200 pt-6">Performance Monitoring</p>
 <div class="space-y-2 mt-2">
+    <a href="{% url 'users:principal_students' %}" class="block px-3 py-2 rounded bs-principal-btn transition">
+        <i class="fas fa-user-graduate mr-2"></i> All Students
+    </a>
     <a href="{% url 'users:principal_view_subject_performance' %}" class="block px-3 py-2 rounded bs-principal-btn transition">
         <i class="fas fa-chart-bar mr-2"></i> Subject Performance
+    </a>
+    <a href="{% url 'users:principal_view_charts' %}" class="block px-3 py-2 rounded bs-principal-btn transition">
+        <i class="fas fa-chart-line mr-2"></i> School-Wide Charts
     </a>
 </div>

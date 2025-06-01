@@ -127,8 +127,8 @@ urlpatterns = [
     # ===============================
     # 🧑‍🏫 Classroom Teacher Subviews
     # ===============================
-    path('dashboard/classroom-teacher/subjects/', classroom_teacher_views.class_subjects_view, name='classroom_teacher_subjects'),
     path('dashboard/classroom-teacher/students/', classroom_teacher_views.classroom_teacher_view_student_view, name="classroom_students"),
+    path('dashboard/classroom-teacher/charts/', classroom_teacher_views.classroom_teacher_student_charts_view, name='classroom_teacher_charts'),
     path("dashboard/classroom-teacher/subject-performance/", classroom_teacher_views.classroom_teacher_view_subject_performance, name="classroom_teacher_view_subject_performance"),
     
     # ✅ 1. CLASSROOM TEACHER EXTENSIONS
@@ -154,7 +154,12 @@ urlpatterns = [
     path("dashboard/subject-teacher/subject-performance/", subject_teacher_views.subject_teacher_view_subject_performance, name="subject_teacher_view_subject_performance"),
     path("dashboard/subject-teacher/students/", subject_teacher_views.subject_teacher_view_student_view, name="subject_students"),
     path('dashboard/subject-teacher/student/<int:student_id>/', subject_teacher_views.subject_teacher_view_studenthub_dashboard, name='subject_teacher_studenthub'),
-
+    path("dashboard/subject-teacher/charts/", subject_teacher_views.subject_teacher_student_charts_view, name="subject_teacher_view_charts"),
+    
+    # ===============================
+    # 🧑‍🏫 Subject Teacher CRUD Views
+    # ===============================
+    path("dashboard/subject-teacher/exam/<int:exam_id>/update-marks/", subject_teacher_views.update_exam_marks_view, name="update_exam_marks"),
         
     # ✅ 2. SUBJECT TEACHER EXTENSIONS
     # ----------------------------------------------------
@@ -177,6 +182,7 @@ urlpatterns = [
     path("dashboard/hod/subject-performance/", hod_views.hod_view_subject_performance, name="hod_view_subject_performance"),
     path("dashboard/hod/dept-current-students/", hod_views.hod_view_student_view, name="hod_students"),
     path('dashboard/hod/student/<int:student_id>/',  hod_views.hod_view_studenthub_dashboard, name='hod_studenthub'),
+    path("dashboard/hod/subjects/charts/", hod_views.hod_student_charts_view, name="hod_view_subject_charts"),
 
     # ✅ 3. HOD EXTENSIONS
     # ----------------------------------------------------
@@ -201,6 +207,7 @@ urlpatterns = [
     path("dashboard/vp/subject-performance/", vice_principal_views.vice_principal_view_subject_performance, name="vice_principal_view_subject_performance"),
     path("dashboard/vp/all-current-students/", vice_principal_views.vice_principal_view_student_view, name="vp_students"),    
     path('dashboard/vp/student/<int:student_id>/', vice_principal_views.vice_principal_view_studenthub_dashboard, name='vice_principal_studenthub'),  
+    path("dashboard/vice-principal/school-wide/charts/", vice_principal_views.vice_principal_student_charts_view, name="vice_principal_view_student_charts"),
 
     # ✅ 4. VICE PRINCIPAL EXTENSIONS
     # ----------------------------------------------------
@@ -223,6 +230,7 @@ urlpatterns = [
     path("dashboard/principal/subject-performance/", principal_views.principal_view_subject_performance, name="principal_view_subject_performance"),
     path("dashboard/principal/all-current-students/", principal_views.principal_view_student_view, name="principal_students"),
     path('dashboard/principal/student/<int:student_id>/', principal_views.principal_view_studenthub_dashboard, name='principal_studenthub'),
+    path("dashboard/principal/school-wide/charts/", principal_views.principal_student_charts_view, name="principal_view_charts"),
 
     # ✅ 5. PRINCIPAL EXTENSIONS
     # ----------------------------------------------------

@@ -2,93 +2,89 @@
 {% load static %}
 {% load shared_filters %}
 
-{% block title %}
-    {{ user.get_full_name|default:"Classroom Teacher" }} Dashboard | {{ school_settings.school_name }}
-{% endblock %}
+{% block title %}{{ request.user.get_full_name }} Dashboard{% endblock %}
 
 {% block content %}
-<div class="space-y-10">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <!-- 🏫 Header Card -->
-    <div class="bg-white p-6 rounded-2xl shadow text-center">
-        <h1 class="text-3xl font-bold text-gray-800">
-            Welcome, {{ user.get_full_name|default:"Teacher" }}
-        </h1>
-        <p class="text-gray-600 text-sm mt-2">
-            This is your classroom dashboard for 
-            <strong>{{ class_group.name|default:"No Class Assigned" }}</strong>
-            — Academic Year <strong>{{ current_year.name }}</strong>.
-        </p>
-        <p class="mt-1 text-xs text-gray-400 italic">
-            Total Students: {{ students|length }}
-        </p>
+  <!-- 👩‍🏫 Classroom Teacher Welcome Header with Message -->
+  <div class="p-6 rounded-xl shadow-sm bs-header-gradient-classroom mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <!-- Profile & Role -->
+    <div class="flex items-center gap-4">
+      {% if request.user.profile_image %}
+        <img src="{{ request.user.profile_image.url }}" alt="Profile Image" class="bs-avatar w-16 h-16">
+      {% else %}
+        <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold uppercase">
+          {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+        </div>
+      {% endif %}
+      <div>
+        <h1 class="text-2xl font-bold leading-tight text-white">Welcome, {{ request.user.get_full_name }}</h1>
+        <p class="text-sm text-white/90">Your role is: <span class="uppercase font-semibold">Classroom Teacher</span></p>
+      </div>
     </div>
 
-    <!-- 📋 Student Table -->
-    <div class="bg-white rounded-2xl shadow p-4 overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-100 text-gray-700 uppercase text-xs">
-                <tr>
-                    <th class="px-4 py-2 text-left">Photo</th>
-                    <th class="px-4 py-2 text-left cursor-pointer">Full Name</th>
-                    <th class="px-4 py-2 text-left cursor-pointer">Gender</th>
-                    <th class="px-4 py-2 text-left">Class Group</th>
-                    <th class="px-4 py-2 text-left cursor-pointer">Avg. Score</th>
-                    <th class="px-4 py-2 text-left">Status</th>
-                    <th class="px-4 py-2 text-left">Dashboard</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-                {% for enrollment in students %}
-                {% with student=enrollment.student %}
-                <tr class="hover:bg-gray-50 transition">
-                    <td class="px-4 py-2">
-                        <img src="{{ student.user.profile_image.url }}" alt="{{ student.user.get_full_name }}" class="w-10 h-10 rounded-full object-cover border">
-                    </td>
-                    <td class="px-4 py-2 font-semibold text-gray-800">
-                        {{ student.user.get_full_name }}
-                    </td>
-                    <td class="px-4 py-2 text-gray-600">
-                        {{ student.user.gender|title }}
-                    </td>
-                    <td class="px-4 py-2 text-gray-600">
-                        {{ enrollment.class_group.name }}
-                    </td>
+    <!-- Message -->
+    <p class="text-sm max-w-xl leading-relaxed text-white/90">
+      Monitor your class group’s academic journey. Access performance summaries, student dashboards, and dynamic charts to support meaningful teaching interventions.
+    </p>
+  </div>
 
-                    <td class="px-4 py-2 font-bold {{ student.avg_score|score_to_text_color }}">
-                      {{ student.avg_score|default:"—" }}
-                    </td>
-                  
-                    <!-- 🟢 Status Label with Icon -->
-                    <td class="px-4 py-2">
-                        <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-800 flex items-center gap-2 w-max">
-                        <i class="fas fa-circle {{ student.avg_score|score_to_text_color }}"></i>
-                        {{ student.status_label }}
-                        </span>
-                    </td>
-                            
+  <!-- 📊 Role Action Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                    <td class="px-4 py-2">
-                        <a href="{% student_dashboard_url student %}"
-                           class="inline-flex items-center space-x-1 text-indigo-600 hover:text-indigo-800 text-sm font-semibold transition">
-                          <span>View</span>
-                          <i class="fas fa-chart-line text-xs"></i>
-                        </a>
-                    </td>
-                      
-                      
-                </tr>
-                {% endwith %}
-                {% empty %}
-                <tr>
-                    <td colspan="7" class="text-center text-gray-400 py-6">
-                        No students enrolled yet.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <!-- 📘 Subject Performance -->
+    <a href="{% url 'users:classroom_teacher_view_subject_performance' %}" class="bs-classroom-teacher-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-chart-bar text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Subject Performance</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Analyze your class group's subject performance<br>
+            View teacher stats, score ranges, grade distributions
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Includes highest/lowest scores, pass rate, exam count, and grade spread.
+      </div>
+    </a>
+
+    <!-- 👥 Class Students -->
+    <a href="{% url 'users:classroom_students' %}" class="bs-classroom-teacher-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-user-graduate text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Class Students</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            View all students in your class group<br>
+            Filter by performance status or gender
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Click a student to access their academic dashboard, report card, and insights.
+      </div>
+    </a>
+
+    <!-- 📈 Class Charts -->
+    <a href="{% url 'users:classroom_teacher_charts' %}" class="bs-classroom-teacher-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-chart-line text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Class Charts</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Visualize class performance trends<br>
+            View charts per subject across your class group
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Easily interpret student performance in each subject using role-colored charts.
+      </div>
+    </a>
+
+  </div>
 
 </div>
 {% endblock %}

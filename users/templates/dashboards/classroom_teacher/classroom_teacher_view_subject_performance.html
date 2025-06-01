@@ -2,15 +2,25 @@
 {% load static %}
 {% load shared_filters %}
 
-{#
-  users > templates > dashboards > classroom_teacher > classroom_teacher_view_subject_performance.html
-  Renders subject performance analytics using role-aware context.
-  Designed with clean Tailwind layout and your CSS overrides in mind.
+{# 
+  Template: classroom_teacher_view_subject_performance.html
+  Purpose: Subject performance analytics with consistent role-aware UI 
 #}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 py-10">
-  <h2 class="text-2xl font-bold mb-6 border-b pb-2 tracking-tight">Subject Performance Summary</h2>
+
+  <!-- 🏷️ Styled, Role-Aware Heading -->
+  <div class="mb-8 p-5 rounded-2xl shadow-sm border border-gray-100 bg-opacity-10 {% role_button_class %}">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <h2 class="text-2xl font-semibold tracking-tight text-white">
+        <i class="fas fa-poll mr-2"></i> Subject Performance Summary
+      </h2>
+      <p class="text-sm text-white text-opacity-80 sm:mt-0 mt-2">
+        Aggregated results for subjects under your class group
+      </p>
+    </div>
+  </div>
 
   {% if subject_performance_analytics %}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -41,7 +51,7 @@
           <div class="flex flex-wrap gap-2 text-xs">
             {% for grade, count in item.grade_distribution.items %}
             <span class="rounded-full px-3 py-1 text-white {{ grade|grade_to_color }} font-bold">
-                {{ grade }}: {{ count }}
+              {{ grade }}: {{ count }}
             </span>
             {% endfor %}
           </div>
@@ -51,7 +61,10 @@
       {% endfor %}
     </div>
   {% else %}
-    <div class="text-gray-500 italic text-sm mt-4">No subject performance data available at the moment.</div>
+    <div class="text-gray-500 italic text-sm mt-4">
+      No subject performance data available at the moment.
+    </div>
   {% endif %}
+
 </div>
 {% endblock %}

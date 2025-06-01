@@ -3,8 +3,28 @@
 {% load shared_filters %}
 
 {% block content %}
-<div class="p-4">
-    <h2 class="text-2xl font-bold mb-4">Your Students</h2>
+<div class="px-4 py-6">
+
+  <!-- 🔍 Filter Form -->
+  <div class="bg-white p-4 rounded-xl shadow mb-6 border border-gray-100">
+    {% include "dashboards/shared/includes/filters/_student_filter_form.html" %}
+  </div>
+
+  <!-- 📊 Student Count -->
+  {% if students %}
+    <div class="inline-flex items-center bg-green-100 text-green-800 text-sm font-medium px-4 py-2 rounded-full mb-4 shadow-sm transition transform duration-300 ease-in-out hover:scale-105">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M15 17h5l-1.405-1.405M4 4l16 16M9 7h6a2 2 0 012 2v6m0 0v3a2 2 0 01-2 2H9m0 0H6a2 2 0 01-2-2V9a2 2 0 012-2h3"></path>
+      </svg>
+      {{ students|length }} student{{ students|length|pluralize }} found
+    </div>
+  {% else %}
+    <p class="text-sm text-red-600 mb-4">No students matched your filters.</p>
+  {% endif %}
+
+  <!-- 👥 Student Cards -->
+  <div class="bg-white p-4 rounded-xl shadow border border-gray-100">
     {% include "dashboards/shared/includes/student_cards/_student_card_list.html" with students=students %}
+  </div>
 </div>
 {% endblock %}

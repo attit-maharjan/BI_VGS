@@ -1,0 +1,12 @@
+{% load static %}
+{% load shared_filters %}
+
+
+
+{% for chart in chart_data_list %}
+
+  {% include "dashboards/shared/includes/student_cards/_student_performance_bar.html" with label=chart.label chart_data=chart.chart_data %}
+{% endfor %}
+
+
+

@@ -1,0 +1,18 @@
+{# ==========================================
+  📄 Include: _exam_info_card.html
+  Reusable card to display Exam details. Located at users > templates > dashboards > subject_teacher > crud_transactions
+========================================== #}
+
+<div class="bg-white rounded-xl shadow p-5 border border-gray-200 mb-8">
+  <h2 class="text-lg font-bold text-gray-700 mb-3">Exam Details</h2>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+    <div><span class="font-medium text-gray-500">Title:</span> {{ exam.title }}</div>
+    <div><span class="font-medium text-gray-500">Subject:</span> {{ exam.subject.name }}</div>
+    <div><span class="font-medium text-gray-500">Class Group:</span> {{ exam.class_group.name }}</div>
+    <div><span class="font-medium text-gray-500">Exam Type:</span> {{ exam.exam_type.name }}</div>
+    <div><span class="font-medium text-gray-500">Academic Year:</span> {{ exam.academic_year.name }}</div>
+    <div><span class="font-medium text-gray-500">Max Marks:</span> {{ exam.max_marks }}</div>
+    <div><span class="font-medium text-gray-500">Conducted On:</span> {{ exam.date_conducted|date:"M d, Y" }}</div>
+    <div><span class="font-medium text-gray-500">Created By:</span> {{ exam.created_by.get_full_name }}</div>
+  </div>
+</div>

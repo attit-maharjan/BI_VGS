@@ -1,0 +1,81 @@
+{% load static %}
+{% load shared_filters %}
+
+<div class="bg-white rounded-2xl shadow-md p-4 md:p-6 mb-6 border border-gray-100">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800">
+      {{ label|default:"Student Performance Chart" }}
+    </h2>
+  </div>
+
+    <div class="w-full max-w-full">
+    <div class="relative" style="min-height: {{ chart.labels|length|add:1|mul:36 }}px;">
+        <canvas class="w-full max-w-full h-full" id="barChart_{{ forloop.counter|default:'1' }}"></canvas>
+    </div>
+    </div>
+
+</div>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx{{ forloop.counter|default:'1' }} = document.getElementById('barChart_{{ forloop.counter|default:'1' }}').getContext('2d');
+
+  new Chart(ctx{{ forloop.counter|default:'1' }}, {
+    type: 'bar',
+    data: {
+      labels: {{ chart.labels|safe }},
+      datasets: [{
+        label: 'Number of Students',
+        data: {{ chart.data|safe }},
+        backgroundColor: [
+          {% for label in chart.labels %}
+            "{{ label|performance_label_to_color }}"{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        ],
+        borderRadius: 6,
+        barThickness: 24
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: {
+        padding: { left: 0, right: 0, top: 0, bottom: 0 }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          barPercentage: 0.6,
+          categoryPercentage: 0.8,
+          ticks: {
+            color: "#334155",
+            font: { size: 14, weight: '500' }
+          }
+        },
+        x: {
+          beginAtZero: true,
+          ticks: {
+            color: "#64748b",
+            font: { size: 12 },
+            stepSize: 5,
+            callback: function(value) {
+              return value % 5 === 0 ? value : '';
+            }
+          },
+          grid: { color: "#e2e8f0" }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "#1e293b",
+          titleColor: "#f8fafc",
+          bodyColor: "#f1f5f9"
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

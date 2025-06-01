@@ -1,0 +1,63 @@
+{% load static %}
+{% load shared_filters %}
+<!-- 🏷️ Dynamic Heading -->
+<!-- 🏷️ Dynamic, Styled, Role-Aware Heading -->
+<div class="mb-6 p-4 rounded-xl shadow-sm border border-gray-100 bg-opacity-10 {% role_button_class %}">
+  <div class="flex items-center gap-3">
+    <i class="fas fa-users text-xl"></i>
+    <h2 class="text-xl font-semibold tracking-tight">
+      Students{% if student_scope_label %} in {{ student_scope_label }}{% endif %}
+    </h2>
+  </div>
+</div>
+
+
+
+<form method="get" class="mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
+
+  <!-- 🎖️ Status -->
+  <div>
+    <label for="status" class="block text-sm font-medium">Status</label>
+    <select name="status" class="w-full border rounded p-2">
+      <option value="">All Statuses</option>
+      {% for status in status_choices %}
+        <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>{{ status }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- 🏫 Class Group -->
+  <div>
+    <label for="classgroup" class="block text-sm font-medium">Class Group</label>
+    <select name="classgroup" class="w-full border rounded p-2">
+      <option value="">All Class Groups</option>
+      {% for cg in classgroup_choices %}
+        <option value="{{ cg.id }}" {% if selected_classgroup == cg.id|stringformat:"s" %}selected{% endif %}>{{ cg.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- 🚻 Gender -->
+  <div>
+    <label for="gender" class="block text-sm font-medium">Gender</label>
+    <select name="gender" class="w-full border rounded p-2">
+      <option value="">All Genders</option>
+      {% for gender in gender_choices %}
+        <option value="{{ gender }}" {% if selected_gender == gender %}selected{% endif %}>{{ gender|capfirst }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <!-- 🔍 Actions -->
+  <div class="flex gap-2">
+    <button type="submit"
+            class="px-4 py-2 rounded-md w-full text-white shadow-sm transition duration-150 ease-in-out {% role_button_class %}">
+    Apply Filters
+    </button>
+
+    <a href="{{ request.path }}" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md w-full text-center">
+    Reset
+    </a>
+
+  </div>
+</form>

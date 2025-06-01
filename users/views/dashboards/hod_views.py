@@ -1,8 +1,8 @@
-'''
+"""
 users > views > dashboards > hod_views.py
 
 Contains views accessible to HODs (Head of Departments).
-'''
+"""
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
@@ -12,9 +12,9 @@ from users.models import Student
 from the_school.models import Subject
 from exams.models import StudentMark
 
-# Context
+# Context & Services
 from users.services.teacher_based_context.v2_subject_performance_context import get_subject_performance_context
-from users.services.teacher_based_services.v2_student_card_service import get_students_for_teacher
+from users.services.teacher_based_services.v2_student_card_service import get_student_card_context_for_teacher
 from users.services.context.v2_student_dashboard_context import get_full_student_context
 from users.services.context.v2_student_metadata_context import build_student_subject_metadata_context
 from users.services.context.v2_student_exam_insights_context import get_exam_results_context
@@ -26,18 +26,17 @@ from users.services.context.v2_1_student_subject_comments_context import build_s
 from users.services.context.v2_student_teacher_contact_context import build_student_teacher_contact_context
 from users.services.student_dashboard_service import get_student_exam_schedule
 
-
 # =====================================================
-# 🧑‍🏫 HEAD OF DEPARTMENT (HOD) DASHBOARD VIEW
+# 🧑‍🏫 HOD: Dashboard
 # =====================================================
 @login_required
 def hod_dashboard(request):
     return render(request, 'dashboards/hod_teacher/hod_teacher_dashboard.html')
 
 
-# ========================================================
-# 🏛️ HOD: Subject Performance View
-# ========================================================
+# =====================================================
+# 📊 HOD: Subject Performance View
+# =====================================================
 @login_required
 def hod_view_subject_performance(request):
     teacher = request.user.teacher
@@ -45,19 +44,18 @@ def hod_view_subject_performance(request):
     return render(request, "dashboards/hod_teacher/hod_view_subject_performance.html", context)
 
 
-# ========================================================
+# =====================================================
 # 🎓 HOD: Department Student List View
-# ========================================================
+# =====================================================
 @login_required
 def hod_view_student_view(request):
-    students = get_students_for_teacher(request.user)
-    context = {"students": students}
+    context = get_student_card_context_for_teacher(request)
     return render(request, "dashboards/hod_teacher/hod_view_student.html", context)
 
 
-# ========================================================
-# 🧠 HOD: Student Hub View (Entry Point)
-# ========================================================
+# =====================================================
+# 🧠 HOD: Student Hub View
+# =====================================================
 @login_required
 def hod_view_studenthub_dashboard(request, student_id):
     teacher = request.user.teacher
@@ -75,23 +73,23 @@ def hod_view_studenthub_dashboard(request, student_id):
         return render(request, "errors/403.html", status=403)
 
     context = get_full_student_context(student)
-    return render(
-        request,
-        "dashboards/hod_teacher/hod_view_studenthub_dashboard.html",
-        context
-    )
+    return render(request, "dashboards/hod_teacher/hod_view_studenthub_dashboard.html", context)
 
 
-# ========================================================
-# 📘 HOD: Shared Per-Student Subviews
-# ========================================================
+# =====================================================
+# 📘 HOD: Student Subviews
+# =====================================================
 
 def verify_hod_access(user, student):
     teacher = getattr(user, "teacher", None)
     if not teacher:
         return False
-    subject_ids = Subject.objects.filter(department__head_of_department=teacher).values_list("id", flat=True)
-    return StudentMark.objects.filter(student=student, exam__subject_id__in=subject_ids).exists()
+    subject_ids = Subject.objects.filter(
+        department__head_of_department=teacher
+    ).values_list("id", flat=True)
+    return StudentMark.objects.filter(
+        student=student, exam__subject_id__in=subject_ids
+    ).exists()
 
 
 @login_required
@@ -176,3 +174,26 @@ def hod_contact_teachers_view(request, student_id):
         return render(request, "errors/403.html", status=403)
     context = build_student_teacher_contact_context(student)
     return render(request, "dashboards/hod_teacher/hod_view_contacts.html", context)
+
+
+    
+    
+    
+# users/views/dashboards/hod_views.py
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render
+from users.services.teacher_based_services.student_performance_chart_service import get_chart_data_list_for_teacher
+
+
+def is_hod(user):
+    return user.is_authenticated and hasattr(user, "teacher") and user.teacher.teacher_role == "HOD"
+
+
+@login_required
+@user_passes_test(is_hod)
+def hod_student_charts_view(request):
+    chart_data_list = get_chart_data_list_for_teacher(request)
+    return render(request, "dashboards/hod_teacher/hod_view_charts.html", {
+        "chart_data_list": chart_data_list
+    })

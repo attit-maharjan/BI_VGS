@@ -9,7 +9,14 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 py-10">
-  <h2 class="text-2xl font-bold mb-6 border-b pb-2 tracking-tight">Subject Performance Summary</h2>
+
+  <!-- 🧪 Gradient Section Header -->
+  <div class="bs-header-gradient-subject-teacher p-5 rounded-xl shadow-sm mb-8">
+    <h2 class="text-2xl font-bold tracking-tight">Subject Performance Summary</h2>
+    <p class="text-sm text-white/90 mt-1">
+      A summary of academic progress in your subject — including class groups, grade stats, and exam trends to support your teaching insights.
+    </p>
+  </div>
 
   {% if subject_performance_analytics %}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -41,9 +48,9 @@
           <p class="text-sm font-medium text-gray-600 mb-1">Grade Distribution:</p>
           <div class="flex flex-wrap gap-2 text-xs">
             {% for grade, count in item.grade_distribution.items %}
-            <span class="rounded-full px-3 py-1 text-white {{ grade|grade_to_color }} font-bold">
+              <span class="rounded-full px-3 py-1 text-white {{ grade|grade_to_color }} font-bold">
                 {{ grade }}: {{ count }}
-            </span>
+              </span>
             {% endfor %}
           </div>
         </div>
@@ -54,5 +61,6 @@
   {% else %}
     <div class="text-gray-500 italic text-sm mt-4">No subject performance data available at the moment.</div>
   {% endif %}
+
 </div>
 {% endblock %}

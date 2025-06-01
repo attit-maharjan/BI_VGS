@@ -1,10 +1,87 @@
 {% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
 
 {% block title %}{{ request.user.get_full_name }} Dashboard{% endblock %}
 
 {% block content %}
-<div class="text-center text-gray-600">
-    <h1 class="text-2xl font-bold">Welcome {{ request.user.get_full_name }}</h1>
-    <p class="mt-2">Your role is: <span class="font-semibold">{{ user.teacher.teacher_role }}</span></p>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <!-- 🧠 HOD Welcome Header with Mission -->
+  <div class="p-6 rounded-xl shadow-sm bs-header-gradient-hod mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex items-center gap-4">
+      {% if request.user.profile_image %}
+        <img src="{{ request.user.profile_image.url }}" alt="Profile Image" class="bs-avatar w-16 h-16">
+      {% else %}
+        <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold uppercase">
+          {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+        </div>
+      {% endif %}
+      <div>
+        <h1 class="text-2xl font-bold leading-tight">Welcome, {{ request.user.get_full_name }}</h1>
+        <p class="text-sm font-medium">Your role is: <span class="uppercase font-semibold">{{ user.teacher.teacher_role }}</span></p>
+      </div>
+    </div>
+
+    <p class="text-sm max-w-xl leading-relaxed text-white/90">
+      As Head of Department, you oversee academic health of your department. Use the dashboard to monitor <strong>performance trends</strong>, guide <strong>subject teams</strong>, and identify growth opportunities.
+    </p>
+  </div>
+
+  <!-- 📊 Dashboard Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- 👥 Student Performance -->
+    <a href="{% url 'users:hod_students' %}" class="bs-hod-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-user-graduate text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Student Performance</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            View all department students<br>
+            Filter by class, status, and gender
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Explore GPA, dashboards, and academic overviews for every student.
+      </div>
+    </a>
+
+    <!-- 🌐 Entire Department Charts -->
+    <a href="{% url 'users:hod_view_subject_charts' %}" class="bs-hod-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-chart-area text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Entire Department</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Visualize department-level subject trends<br>
+            Filter charts by academic year or class group
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Aggregated performance charts across all department subjects.
+      </div>
+    </a>
+
+    <!-- 📊 Subject Performance -->
+    <a href="{% url 'users:hod_view_subject_performance' %}" class="bs-hod-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-chart-bar text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Subject Performance</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Compare all subjects in your department<br>
+            View metrics, teacher roles, pass rate
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Review score distributions, standard deviation, and exam records.
+      </div>
+    </a>
+
+  </div>
 </div>
 {% endblock %}

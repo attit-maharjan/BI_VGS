@@ -16,8 +16,6 @@ from users.models import Student
 from enrollments.models import ClassGroupStudentEnrollment
 
 # Dashboard Context Services
-from users.services.teacher_based_context.v2_classroom_teacher_context import classroom_teacher_dashboard_context
-from users.services.teacher_based_context.v2_subject_assignment_context import classroom_teacher_subjects_context
 from users.services.context.v2_student_dashboard_context import get_full_student_context
 
 # Student Academic Context Services
@@ -42,7 +40,7 @@ from users.services.context.v2_student_exam_highlights import get_student_exam_h
 
 @login_required
 def classroom_teacher_dashboard(request):
-    context = classroom_teacher_dashboard_context(request.user)
+    context = {"name": "Philip"}
     return render(
         request,
         "dashboards/classroom_teacher/classroom_teacher_dashboard.html",
@@ -56,14 +54,14 @@ def classroom_teacher_dashboard(request):
 # Shows all subjects assigned to the teacher's class group
 # ========================================================
 
-@login_required
-def class_subjects_view(request):
-    context = classroom_teacher_subjects_context(request.user)
-    return render(
-        request,
-        "dashboards/classroom_teacher/class_student_subjects.html",
-        context
-    )
+# @login_required
+# def class_subjects_view(request):
+#     context = classroom_teacher_subjects_context(request.user)
+#     return render(
+#         request,
+#         "dashboards/classroom_teacher/class_student_subjects.html",
+#         context
+#     )
 
 
 # ========================================================
@@ -233,10 +231,30 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from users.services.teacher_based_services.v2_student_card_service import get_students_for_teacher
 
+
+
+from users.services.teacher_based_services.v2_student_card_service import get_student_card_context_for_teacher
+
 @login_required
 def classroom_teacher_view_student_view(request):
-    students = get_students_for_teacher(request.user)
+    context = get_student_card_context_for_teacher(request)
+    return render(
+        request,
+        "dashboards/classroom_teacher/classroom_teacher_view_student.html",
+        context
+    )
+
+
+
+from users.services.teacher_based_services.student_performance_chart_service import get_chart_data_list_for_teacher
+
+@login_required
+def classroom_teacher_student_charts_view(request):
     context = {
-        "students": students,
+        "chart_data_list": get_chart_data_list_for_teacher(request)
     }
-    return render(request, "dashboards/classroom_teacher/classroom_teacher_view_student.html", context)
+    return render(
+        request,
+        "dashboards/classroom_teacher/classroom_teacher_view_charts.html",
+        context
+    )

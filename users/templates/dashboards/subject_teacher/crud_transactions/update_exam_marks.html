@@ -1,0 +1,58 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+
+  <!-- 📝 Exam Information Card -->
+  {% include "dashboards/subject_teacher/crud_transactions/_exam_info_card.html" %}
+
+  <!-- 🔧 Update Marks Form -->
+  <form method="POST" novalidate>
+    {% csrf_token %}
+
+    {% if formset.non_form_errors %}
+      <div class="bg-red-100 text-red-700 text-sm p-3 rounded mb-4">
+        {{ formset.non_form_errors }}
+      </div>
+    {% endif %}
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-300 shadow border border-gray-200 rounded-lg bg-white text-sm">
+        <thead class="bg-emerald-600 text-white">
+          <tr>
+            <th class="text-left px-4 py-3">Student</th>
+            <th class="text-left px-4 py-3">Current Score</th>
+            <th class="text-left px-4 py-3">Updated Score</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          {% for form in formset %}
+            <tr class="hover:bg-emerald-50">
+              <td class="px-4 py-3 font-medium">
+                {{ form.instance.student.get_full_name }}
+              </td>
+              <td class="px-4 py-3 text-gray-600">
+                {{ form.instance.score|default:"—" }}
+              </td>
+              <td class="px-4 py-3">
+                {{ form.score.errors }}
+                {{ form.score }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ✅ Submit Button -->
+    <div class="mt-6 text-right">
+      <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded shadow">
+        Update Marks
+      </button>
+    </div>
+  </form>
+
+</div>
+{% endblock %}

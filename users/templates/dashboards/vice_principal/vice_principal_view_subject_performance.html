@@ -3,13 +3,20 @@
 {% load shared_filters %}
 
 {#
-  View: Vice Principal → Subject Performance Summary
+  View: Vice Principal → Subject Performance Overview
   Uses shared include with filtering
 #}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 py-10">
-  <h2 class="text-2xl font-bold mb-6 border-b pb-2 tracking-tight">Subject Performance Overview</h2>
+
+  <!-- 🧑‍💼 Gradient Header for Subject Performance Overview -->
+  <div class="bs-header-gradient-vice-principal p-5 rounded-xl shadow-sm mb-8">
+    <h2 class="text-2xl font-bold tracking-tight">Subject Performance Overview</h2>
+    <p class="text-sm text-white/90 mt-1">
+      Review performance across all subjects in the school — filter by subject to uncover scores, pass rates, and grade trends.
+    </p>
+  </div>
 
   {% include "dashboards/shared/includes/_subject_performance_filtered_block.html" %}
 </div>

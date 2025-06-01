@@ -2,12 +2,16 @@
 {% load static %}
 {% load shared_filters %}
 
-
-
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 py-10">
-  <h2 class="text-2xl font-bold mb-6 border-b pb-2 tracking-tight">Department Subject Performance</h2>
 
+  <!-- 🧠 Role-Aware Section Header -->
+  <div class="bs-header-gradient-hod p-5 rounded-xl shadow-sm mb-8">
+    <h2 class="text-2xl font-bold tracking-tight">Department Subject Performance</h2>
+    <p class="text-sm text-white/90 mt-1">
+      This table summarizes score trends across all subjects in your department — including pass rates, class coverage, and exam metrics.
+    </p>
+  </div>
 
   {% if subject_performance_analytics %}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

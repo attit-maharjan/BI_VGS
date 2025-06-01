@@ -1,0 +1,29 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <!-- 🏷️ Dynamic, Styled, Role-Aware Heading -->
+  <div class="mb-6 p-5 rounded-2xl shadow-sm border border-gray-100 bg-opacity-10 {% role_button_class %}">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <h1 class="text-2xl font-semibold tracking-tight text-white">
+        <i class="fas fa-chart-line mr-2"></i> Subject Performance Overview
+      </h1>
+      <p class="text-sm text-white text-opacity-80 sm:mt-0 mt-2">
+        Charts for subjects assigned to you
+      </p>
+    </div>
+  </div>
+
+  {% if chart_data_list %}
+    {% for chart in chart_data_list %}
+      {% include "dashboards/shared/includes/student_cards/_chart_group_wrapper.html" with chart=chart %}
+    {% endfor %}
+  {% else %}
+    <p class="text-center text-gray-400 py-12">No chart data available for your assigned subjects.</p>
+  {% endif %}
+
+</div>
+{% endblock %}

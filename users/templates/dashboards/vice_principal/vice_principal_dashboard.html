@@ -1,10 +1,91 @@
 {% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
 
 {% block title %}{{ request.user.get_full_name }} Dashboard{% endblock %}
 
 {% block content %}
-<div class="text-center text-gray-600">
-    <h1 class="text-2xl font-bold">Welcome {{ request.user.get_full_name }}</h1>
-    <p class="mt-2">Your role is: <span class="font-semibold">{{ user.teacher.teacher_role }}</span></p>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <!-- 🧑‍✎ Vice Principal Welcome Header with Story-Driven Message -->
+  <div class="p-6 rounded-xl shadow-sm bs-header-gradient-vice-principal mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+    <!-- 👤 Left: Optional Profile Info -->
+    <div class="flex items-center gap-4">
+      {% if request.user.profile_image %}
+        <img src="{{ request.user.profile_image.url }}" alt="Profile Image" class="bs-avatar w-16 h-16">
+      {% else %}
+        <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold uppercase">
+          {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+        </div>
+      {% endif %}
+
+      <div>
+        <h1 class="text-2xl font-bold leading-tight text-white">Welcome, {{ request.user.get_full_name }}</h1>
+        <p class="text-sm font-medium text-white">Your role is: <span class="uppercase font-semibold">{{ user.teacher.teacher_role }}</span></p>
+      </div>
+    </div>
+
+    <!-- 📘 Right: Mission Statement -->
+    <p class="text-sm max-w-xl leading-relaxed text-white/90">
+      BIVGS goes beyond grades — it reveals the story behind performance. Use this interactive platform to empower <strong>students</strong>, support <strong>teachers</strong>, and engage <strong>parents</strong> with meaningful insights that inspire growth.
+    </p>
+  </div>
+
+  <!-- 📊 Dashboard Cards for Vice Principal -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- 🧑‍\u🏫 All Students -->
+    <a href="{% url 'users:vp_students' %}" class="bs-vice-principal-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-user-graduate text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">All Students</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Explore all registered students<br>
+            Filter by <strong>Status</strong>, <strong>Class Group</strong>, or <strong>Gender</strong>
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Access student dashboards with academic summaries, grades, charts, and PDF reports.
+      </div>
+    </a>
+
+    <!-- 📊 Subject Performance -->
+    <a href="{% url 'users:vice_principal_view_subject_performance' %}" class="bs-vice-principal-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-chart-bar text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Subject Performance</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Evaluate subject-wide insights<br>
+            Filter by subject and track pass rates, averages, and grade bands
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Includes exam count, latest exam date, deviation, teacher, and grade spread.
+      </div>
+    </a>
+
+    <!-- 📊 School-Wide Charts -->
+    <a href="{% url 'users:vice_principal_view_student_charts' %}" class="bs-vice-principal-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-chart-line text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">School-Wide Charts</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Visualize class performance across departments<br>
+            Filter by year, class, or department
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Subject + class-level charts that highlight trends, risk areas, and gender stats.
+      </div>
+    </a>
+
+  </div>
 </div>
 {% endblock %}

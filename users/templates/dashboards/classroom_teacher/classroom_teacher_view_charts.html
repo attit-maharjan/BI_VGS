@@ -1,0 +1,23 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
+
+{% block content %}
+  <div class="max-w-6xl mx-auto px-4 py-6">
+
+    <!-- 🏷️ Styled, Role-Aware Heading -->
+    <div class="mb-6 p-5 rounded-2xl shadow-sm border border-gray-100 bg-opacity-10 {% role_button_class %}">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <h1 class="text-2xl font-semibold tracking-tight text-white">
+          <i class="fas fa-chalkboard-teacher mr-2"></i> Class Performance Summary
+        </h1>
+        <p class="text-sm text-white text-opacity-80 sm:mt-0 mt-2">
+          Charts for your class group subjects
+        </p>
+      </div>
+    </div>
+
+    {% include "dashboards/shared/includes/student_cards/_chart_group_wrapper.html" %}
+    
+  </div>
+{% endblock %}

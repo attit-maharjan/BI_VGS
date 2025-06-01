@@ -390,3 +390,31 @@ def student_contact_teachers_url(context, student):
             "Vice Principal": "users:vice_principal_teacher_contacts"
         }[role], args=[student.id])
     return "#"
+
+
+@register.filter
+def mul(value, arg):
+    """Multiply the value by the arg"""
+    try:
+        return int(value) * int(arg)
+    except:
+        return ""
+    
+@register.filter
+def performance_label_to_color(label):
+    """
+    Maps performance labels to Tailwind/Chart.js-friendly hex colors
+    consistent with score_to_border_color_code and grading themes.
+    """
+    color_map = {
+        "Outstanding": "#4c9f38",   # Green (90-100)
+        "Very Good":   "#3f7e44",   # Deep Green (80-89)
+        "Good":        "#dda63a",   # Yellow-Gold (70-79)
+        "Fair":        "#fd9d24",   # Orange (60-69)
+        "At Risk":     "#ff3a21",   # Red-Orange (50-59)
+        "Critical":    "#e5243b",   # Deep Red (0-49)
+        "Male":        "#0ea5e9",   # Tailwind sky-500
+        "Female":      "#f472b6",   # Tailwind pink-400
+        "Total Students": "#334155", # Tailwind slate-800
+    }
+    return color_map.get(label, "#cbd5e1")  # fallback: slate-300

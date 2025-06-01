@@ -1,10 +1,108 @@
 {% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
 
 {% block title %}{{ request.user.get_full_name }} Dashboard{% endblock %}
 
 {% block content %}
-<div class="text-center text-gray-600">
-    <h1 class="text-2xl font-bold">Welcome {{ request.user.get_full_name }}</h1>
-    <p class="mt-2">Your role is: <span class="font-semibold">{{ user.teacher.teacher_role }}</span></p>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <!-- 📚 Subject Teacher Welcome -->
+  <div class="p-6 rounded-xl shadow-sm bs-header-gradient-subject-teacher mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+    <!-- 👤 Profile Section -->
+    <div class="flex items-center gap-4">
+      {% if request.user.profile_image %}
+        <img src="{{ request.user.profile_image.url }}" alt="Profile Image" class="bs-avatar w-16 h-16">
+      {% else %}
+        <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold uppercase">
+          {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+        </div>
+      {% endif %}
+      <div>
+        <h1 class="text-2xl font-bold leading-tight text-white">Welcome, {{ request.user.get_full_name }}</h1>
+        <p class="text-sm font-medium text-white/90">Your role is: <span class="uppercase font-semibold">Subject Teacher</span></p>
+      </div>
+    </div>
+
+    <!-- 🎯 Mission -->
+    <p class="text-sm max-w-xl leading-relaxed text-white/90">
+      Track how your students are performing across assigned subjects. Analyze subject stats, manage learners, update remarks, and visualize trends — all in one place.
+    </p>
+  </div>
+
+  <!-- 🧭 Navigation Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+
+    <!-- 📈 Subject Performance -->
+    <a href="{% url 'users:subject_teacher_view_subject_performance' %}" class="bs-subject-teacher-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-chart-bar text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Subject Performance</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            View performance metrics for your subject<br>
+            Includes averages, pass rate, std deviation, grade spread
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Performance stats like highest/lowest marks, most recent exam, and grade distribution.
+      </div>
+    </a>
+
+    <!-- 👥 My Students -->
+    <a href="{% url 'users:subject_students' %}" class="bs-subject-teacher-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-user-graduate text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">My Students</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Access student profiles in your subject<br>
+            Filter by status, gender, class group
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Each student leads to their academic dashboard including GPA and score trends.
+      </div>
+    </a>
+
+    <!-- 📊 Charts -->
+    <a href="{% url 'users:subject_teacher_view_charts' %}" class="bs-subject-teacher-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-chart-line text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Performance Charts</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Visualize your subject performance<br>
+            Chart scores across assigned class groups
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Easy-to-read bar graphs summarizing subject performance across cohorts.
+      </div>
+    </a>
+
+    <!-- ✏️ Update Exam Marks -->
+    <a href="#" class="bs-subject-teacher-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-book-reader text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Update Exam Marks</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Add or edit student remarks<br>
+            Update performance feedback directly from table
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Displays latest scores. Modify remarks and save changes for individual learners.
+      </div>
+    </a>
+
+  </div>
+
 </div>
 {% endblock %}
