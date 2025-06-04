@@ -1,5 +1,7 @@
 /* ==========================================================================
    CUSTOM STYLESHEET FOR TAILWIND-BASED DJANGO PROJECT
+
+   static > shared > css > bootstrap_overrides_for_tailwind.css
    ==========================================================================
 
    ✨ Purpose:
@@ -198,90 +200,92 @@
 
 /* ==========================================================================
     🌐 Corporate Sidebar Buttons Color Scheme (Role Specific)
-    Optimized for visual harmony, accessibility, and corporate UX tone
+    Updated to match .bs-* academic color classes for full design consistency
 ========================================================================== */
 
 /* 🎓 Student Buttons */
 .bs-student-btn {
-  background-color: #3b82f6; /* blue-500 */
-  color: #ffffff;
+  background-color: #fcc30b; /* gold */
+  color: #000000;
   transition: background-color 0.2s ease-in-out;
 }
 .bs-student-btn:hover {
-  background-color: #2563eb; /* blue-600 */
+  background-color: #dda63a; /* yellow */
 }
 
 /* 🏛️ Admin Buttons */
 .bs-admin-btn {
-  background-color: #b91c1c; /* red-700 */
+  background-color: #e5243b; /* red */
   color: #ffffff;
   transition: background-color 0.2s ease-in-out;
 }
 .bs-admin-btn:hover {
-  background-color: #991b1b; /* red-800 */
+  background-color: #c5192d; /* dark red */
 }
 
 /* 👨‍👩‍👧 Parent Buttons */
 .bs-parent-btn {
-  background-color: #64748b; /* slate-500 */
-  color: #ffffff;
+  background-color: #fd6925; /* orange */
+  color: #000000;
   transition: background-color 0.2s ease-in-out;
 }
 .bs-parent-btn:hover {
-  background-color: #475569; /* slate-600 */
+  background-color: #fd9d24; /* dark orange */
 }
 
 /* 👑 Principal Buttons */
 .bs-principal-btn {
-  background-color: #1e3a8a; /* blue-900 */
+  background-color: #00689d; /* deep blue */
   color: #ffffff;
   transition: background-color 0.2s ease-in-out;
 }
 .bs-principal-btn:hover {
-  background-color: #1e40af; /* blue-800 */
+  background-color: #0a97d9; /* sea blue */
 }
 
 /* 🧑‍💼 Vice Principal Buttons */
 .bs-vice-principal-btn {
-  background-color: #0f766e; /* teal-700 */
+  background-color: #19486a; /* navy blue */
   color: #ffffff;
   transition: background-color 0.2s ease-in-out;
 }
 .bs-vice-principal-btn:hover {
-  background-color: #115e59; /* teal-800 */
+  background-color: #00689d; /* deep blue */
 }
 
 /* 🧠 Head of Department (HOD) Buttons */
 .bs-hod-btn {
-  background-color: #6b21a8; /* purple-800 */
+  background-color: #0a97d9; /* sea blue */
   color: #ffffff;
   transition: background-color 0.2s ease-in-out;
 }
 .bs-hod-btn:hover {
-  background-color: #581c87; /* purple-900 */
+  background-color: #26bde2; /* light blue */
 }
 
 /* 🏫 Classroom Teacher Buttons */
 .bs-classroom-teacher-btn {
-  background-color: #15803d; /* green-700 */
+  background-color: #4c9f38; /* green */
   color: #ffffff;
   transition: background-color 0.2s ease-in-out;
 }
 .bs-classroom-teacher-btn:hover {
-  background-color: #166534; /* green-800 */
+  background-color: #3f7e44; /* dark green */
 }
 
 /* 📚 Subject Teacher Buttons */
 .bs-subject-teacher-btn {
-  background-color: #334155; /* blue-gray-700 */
+  background-color: #56c02b; /* forest green */
   color: #ffffff;
   transition: background-color 0.2s ease-in-out;
 }
 .bs-subject-teacher-btn:hover {
-  background-color: #1e293b; /* blue-gray-800 */
+  background-color: #3f7e44; /* dark green */
 }
 
-/* Optional Enhancements (add shadow for depth if desired) */
+/* ==========================================================================
+  ✅ Shared Enhancements: depth, rounding, padding
+========================================================================== */
 .bs-student-btn,
 .bs-admin-btn,
 .bs-parent-btn,
@@ -299,6 +303,7 @@
 /* ==========================================================================
   ✅ End of Corporate Sidebar Buttons Customizations
 ========================================================================== */
+
 
 
 /* ==========================================================================
@@ -563,4 +568,60 @@ Usage Example:
   display: block;       /* Ensures margins apply */
   margin-top: 1em;      /* Space above */
   margin-bottom: 1em;   /* Space below */
+}
+
+
+/* 
+  Custom padding utility for table cells.
+  Equivalent to Tailwind CSS classes:
+  - py-3 (padding-top and padding-bottom: 0.75rem)
+  - px-4 (padding-left and padding-right: 1rem)
+  Use this class to maintain consistent cell spacing when Tailwind's @apply or config extensions are unavailable.
+*/
+.bs-td-padding {
+  padding: 0.75rem 1rem; /* Equivalent to Tailwind's py-3 px-4 */
+}
+
+
+
+/* 🌈 Role-Based Header Gradients */
+.bs-header-gradient-principal {
+  background-image: linear-gradient(to right, #00689d, #26bde2); /* Principal: deep blue → light blue */
+  color: #ffffff;
+}
+
+.bs-header-gradient-vice-principal {
+  background-image: linear-gradient(to right, #19486a, #00689d); /* Vice Principal: navy → deep blue */
+  color: #ffffff;
+}
+
+.bs-header-gradient-hod {
+  background-image: linear-gradient(to right, #0a97d9, #26bde2); /* HOD: sea blue → light blue */
+  color: #ffffff;
+}
+
+/* 👩‍🏫 Classroom Teacher Header Gradient */
+.bs-header-gradient-classroom {
+  background-image: linear-gradient(to right, #3f7e44, #4c9f38); /* dark green to green */
+  color: white;
+}
+
+
+/* 📚 Subject Teacher Header Gradient */
+.bs-header-gradient-subject-teacher {
+  background-image: linear-gradient(to right, #56c02b, #3f7e44); /* Matches bs-subject-teacher-btn */
+  color: white;
+}
+
+
+/* 🏛️ Admin Header Gradient */
+.bs-header-gradient-admin {
+  background-image: linear-gradient(to right, #c5192d, #e5243b); /* dark red to red */
+  color: #ffffff;
+}
+
+/* 👨‍🎓 Student Header Gradient */
+.bs-header-gradient-student {
+  background-image: linear-gradient(to right, #fcc30b, #dda63a); /* gold → yellow */
+  color: #000000;
 }
