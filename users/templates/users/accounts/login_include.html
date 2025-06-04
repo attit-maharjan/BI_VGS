@@ -1,43 +1,76 @@
-<!-- templates/users/accounts/login_include.html -->
 {% load widget_tweaks %}
 {% load static %}
+{% load shared_filters %}
 
 <form method="post" novalidate class="w-full max-w-sm space-y-6">
-    {% csrf_token %}
-    <h2 class="text-3xl font-bold text-center bs-h2-color">
-        {{ school_settings.school_name|default:"Our School" }} Portal
-    </h2>
-    <p class="text-center text-gray-500 text-sm mb-6">Login to your account</p>
+  {% csrf_token %}
+  
+  <!-- Portal Title -->
+  <h2 class="text-3xl font-bold text-center bs-h2-color">
+    {{ school_settings.school_name|default:"Our School" }} Portal
+  </h2>
+  <p class="text-center text-gray-500 text-sm mb-6">Login to your account</p>
 
-    {% if form.non_field_errors %}
-      <p class="text-red-600 text-sm">{{ form.non_field_errors }}</p>
+  <!-- Flash Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="p-3 rounded-md text-sm mb-4
+        {% if message.tags == 'success' %}bg-green-100 text-green-800
+        {% elif message.tags == 'error' %}bg-red-100 text-red-800
+        {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Non-field Errors -->
+  {% if form.non_field_errors %}
+    <div class="text-sm text-red-600">
+      {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Email Field -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700">{{ form.username.label }}</label>
+    {% with "mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:shadow-md hover:border-indigo-400 transition duration-150"|append_if_error:form.username as final_class %}
+      {{ form.username|add_class:final_class }}
+    {% endwith %}
+    {% if form.username.errors %}
+      <p class="text-sm text-red-600 mt-1">{{ form.username.errors.0 }}</p>
     {% endif %}
+  </div>
 
-    <div>
-        <label class="block text-sm font-medium text-gray-700">{{ form.username.label }}</label>
-        {{ form.username|add_class:"mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" }}
-    </div>
+  <!-- Password Field -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700">{{ form.password.label }}</label>
+    {% with "mt-1 w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:shadow-md hover:border-indigo-400 transition duration-150"|append_if_error:form.password as final_class %}
+      {{ form.password|add_class:final_class }}
+    {% endwith %}
+    {% if form.password.errors %}
+      <p class="text-sm text-red-600 mt-1">{{ form.password.errors.0 }}</p>
+    {% endif %}
+  </div>
 
-    <div>
-        <label class="block text-sm font-medium text-gray-700">{{ form.password.label }}</label>
-        {{ form.password|add_class:"mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" }}
-    </div>
+  <!-- Remember Me -->
+  <div class="flex items-center">
+    {{ form.remember_me }}
+    <label for="remember_me" class="ml-2 block text-sm text-gray-600">
+      {{ form.remember_me.label }}
+    </label>
+  </div>
 
-    <div class="flex items-center">
-        {{ form.remember_me }}
-        <label for="remember_me" class="ml-2 block text-sm text-gray-600">
-            {{ form.remember_me.label }}
-        </label>
-    </div>
+  <!-- Submit Button -->
+  <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition duration-150 ease-in-out">
+    Login
+  </button>
 
-    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition duration-150 ease-in-out">
-        Login
-    </button>
-
-    <!-- 🔗 Continue without login -->
-    <div class="mt-4 text-center">
-        <a href="{% url 'the_school:index' %}" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors">
-            <i class="fas fa-home mr-1"></i>Continue without login
-        </a>
-    </div>
+  <!-- Back to homepage -->
+  <div class="mt-4 text-center">
+    <a href="{% url 'the_school:index' %}" class="text-sm text-gray-500 hover:text-indigo-600 transition-colors">
+      <i class="fas fa-home mr-1"></i>Continue without login
+    </a>
+  </div>
 </form>

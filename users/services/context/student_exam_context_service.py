@@ -3,11 +3,11 @@
 
 # 📦 Import necessary services and models
 from users.services.exam_analytics_and_reports_service import (
-    calculate_gpa_and_grade,  # GPA & grade calculator
+    calculate_gpa_and_grade,  # GPA & grade calculator for future
     ExamAnalyticsAndReportsService,
 )
-from users.helpers.generate_chart_images import generate_report_chart_images          # Chart generator for PDF
-from users.helpers.comment_generation import generate_subject_comments                # Subject-based comment logic
+from users.helpers.generate_chart_images import generate_report_chart_images          # Chart generator for PDF for future
+from users.helpers.comment_generation import generate_subject_comments                # Subject-based comment logic for future
 from exams.models import (
     StudentMark, # Student mark model
     GradeRange,

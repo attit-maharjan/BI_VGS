@@ -1,10 +1,97 @@
 {% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
 
 {% block title %}{{ request.user.get_full_name }} Dashboard{% endblock %}
 
 {% block content %}
-<div class="text-center text-gray-600">
-    <h1 class="text-2xl font-bold">Welcome {{ request.user.get_full_name }}</h1>
-    <p class="mt-2">Your role is: <span class="font-semibold">{{ user.get_role_display }}</span></p>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <!-- 👤 Admin Welcome Header -->
+  <div class="p-6 rounded-xl shadow-sm bs-header-gradient-admin mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex items-center gap-4">
+      {% if request.user.profile_image %}
+        <img src="{{ request.user.profile_image.url }}" alt="Profile Image" class="bs-avatar w-16 h-16">
+      {% else %}
+        <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold uppercase">
+          {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+        </div>
+      {% endif %}
+
+      <div>
+        <h1 class="text-2xl font-bold leading-tight">Welcome, {{ request.user.get_full_name }}</h1>
+        <p class="text-sm font-medium">Your role is: <span class="uppercase font-semibold">ADMIN</span></p>
+      </div>
+    </div>
+
+    <p class="text-sm max-w-xl leading-relaxed text-white/90">
+      As system administrator, you oversee registration, user assignments, and platform readiness. Ensure no user is left unassigned.
+    </p>
+  </div>
+
+  <!-- ✅ Flash Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="mb-6 p-4 rounded-md text-sm
+        {% if message.tags == 'success' %}bg-green-100 text-green-800
+        {% elif message.tags == 'error' %}bg-red-100 text-red-800
+        {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- 📊 Admin Dashboard Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- 🧾 Register New Users -->
+    <a href="{% url 'users:admin_register_user' %}" class="bs-admin-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-user-plus text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Register New User</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Add new student or admin manually via form.
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Full profile creation form with validation and user roles.
+      </div>
+    </a>
+
+    <!-- ⚙️ School Settings -->
+    <a href="{% url 'users:admin_update_school_settings' %}" class="bs-admin-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-cogs text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Update School Settings</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            Edit school name, contact, homepage text, or legal policies.
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Singleton form ensures one central configuration across system.
+      </div>
+    </a>
+
+    <!-- 🔍 Unassigned Users -->
+    <a href="{% url 'users:admin_unassigned_students' %}" class="bs-admin-btn flex flex-col justify-between p-5 rounded-xl shadow-sm transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-user-times text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Unassigned Users</h2>
+          <p class="text-sm text-white opacity-80 leading-tight">
+            View users who lack key links:<br> students without class, teachers without subject, etc.
+          </p>
+        </div>
+      </div>
+      <div class="text-xs text-white opacity-90 mt-auto">
+        Assign roles, subjects or class groups to finalize onboarding.
+      </div>
+    </a>
+
+  </div>
 </div>
 {% endblock %}

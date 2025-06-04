@@ -5,49 +5,207 @@
     {{ user.get_full_name|default:"Student" }} Dashboard | {{ school_settings.school_name|default:"School" }}
 {% endblock %}
 
-
-
-
 {% block content %}
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    <div class="bg-white p-6 rounded-2xl shadow-md">
-        <h2 class="text-lg font-semibold text-gray-700 mb-2">Current Class Group</h2>
-        <p class="text-2xl text-blue-600 font-bold">{{ classgroup.name|default:"-" }}</p>
+  <!-- 🎓 Student Dashboard Header -->
+  <div class="w-full bs-header-gradient-student shadow-sm mb-10 rounded-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+
+      <!-- 👋 Welcome Message -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex items-center gap-4">
+          {% if request.user.profile_image %}
+            <img src="{{ request.user.profile_image.url }}" alt="Profile Image" class="bs-avatar w-16 h-16">
+          {% else %}
+            <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl font-bold uppercase">
+              {{ request.user.first_name|first }}{{ request.user.last_name|first }}
+            </div>
+          {% endif %}
+
+          <div>
+            <h1 class="text-2xl font-bold leading-tight">Welcome, {{ request.user.get_full_name }}</h1>
+            <p class="text-sm font-medium text-black/70">Your role is: <span class="uppercase font-semibold">STUDENT</span></p>
+          </div>
+        </div>
+
+        <p class="text-sm max-w-xl leading-relaxed text-black/70">
+          This is your academic dashboard — keep track of your progress, performance, and future goals all in one place.
+        </p>
+      </div>
+
+      <!-- 📊 Inline Dashboard Metrics -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-white p-4 rounded-xl shadow text-center">
+          <p class="text-sm text-gray-500">Current Class Group</p>
+          <p class="text-2xl text-blue-600 font-bold">{{ classgroup.name|default:"-" }}</p>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow text-center">
+          <p class="text-sm text-gray-500">My Average Score</p>
+          <p class="text-2xl text-green-600 font-bold" id="scoreCounter">{{ average_score }}</p>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl shadow text-center">
+          <p class="text-sm text-gray-500">Total Subjects</p>
+          <p class="text-2xl text-purple-600 font-bold" id="subjectCounter">{{ subjects_count }}</p>
+        </div>
+      </div>
+
     </div>
+  </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow-md">
-        <h2 class="text-lg font-semibold text-gray-700 mb-2">My Average Score</h2>
-        <p class="text-2xl text-green-600 font-bold" id="scoreCounter">{{ average_score }}</p>
-    </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow-md">
-        <h2 class="text-lg font-semibold text-gray-700 mb-2">Total Subjects</h2>
-        <p class="text-2xl text-purple-600 font-bold" id="subjectCounter">{{ subjects_count }}</p>
-    </div>
-
-</div>
-
+<!-- 📚 Student Quick Access Cards -->
 <div class="mt-10">
-    <h2 class="text-2xl font-bold mb-4 text-gray-800">Performance Overview</h2>
+  <h2 class="text-2xl font-bold mb-4 text-gray-800">Quick Access</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+    <!-- 📘 My Subjects -->
+    <a href="{% url 'users:student_subjects' %}" class="bs-student-btn flex flex-col justify-between p-5 rounded-xl shadow transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-book text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">My Subjects</h2>
+          <p class="text-sm opacity-90 leading-tight">View your registered subjects and department info.</p>
+        </div>
+      </div>
+      <div class="text-xs opacity-90 mt-auto">Stay up to date with your curriculum.</div>
+    </a>
+
+    <!-- 🗓️ My Exams Timetable -->
+    <a href="{% url 'users:student_exam_schedule' %}" class="bs-student-btn flex flex-col justify-between p-5 rounded-xl shadow transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-graduation-cap text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">My Exams Timetable</h2>
+          <p class="text-sm opacity-90 leading-tight">Check when and what exams are scheduled.</p>
+        </div>
+      </div>
+      <div class="text-xs opacity-90 mt-auto">Plan your revision confidently.</div>
+    </a>
+
+    <!-- 📋 My Grades -->
+    <a href="{% url 'users:student_exam_summary' %}" class="bs-student-btn flex flex-col justify-between p-5 rounded-xl shadow transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-list-ol text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">My Grades</h2>
+          <p class="text-sm opacity-90 leading-tight">See your scores and grades for each exam.</p>
+        </div>
+      </div>
+      <div class="text-xs opacity-90 mt-auto">Reflect on your academic results.</div>
+    </a>
+
+    <!-- 📈 Performance Stats -->
+    <a href="{% url 'users:student_exam_performance' %}" class="bs-student-btn flex flex-col justify-between p-5 rounded-xl shadow transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-chart-line text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Performance Stats</h2>
+          <p class="text-sm opacity-90 leading-tight">Compare your scores against class averages.</p>
+        </div>
+      </div>
+      <div class="text-xs opacity-90 mt-auto">Track your trends and growth.</div>
+    </a>
+
+    <!-- 🧠 Grade Insights -->
+    <a href="{% url 'users:student_exam_insights' %}" class="bs-student-btn flex flex-col justify-between p-5 rounded-xl shadow transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-chart-pie text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Grade Insights</h2>
+          <p class="text-sm opacity-90 leading-tight">Understand your grade distribution and percentile.</p>
+        </div>
+      </div>
+      <div class="text-xs opacity-90 mt-auto">Visualize how you're performing across grades.</div>
+    </a>
+
+
+
+    <!-- 💬 Subject Comments -->
+    <a href="{% url 'users:student_exam_comments' %}" class="bs-student-btn flex flex-col justify-between p-5 rounded-xl shadow transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-comments text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Subject Comments</h2>
+          <p class="text-sm opacity-90 leading-tight">View feedback and reflections for your subjects.</p>
+        </div>
+      </div>
+      <div class="text-xs opacity-90 mt-auto">Get personalized academic comments.</div>
+    </a>
+
+    <!-- 📄 Report Card (View) -->
+    <a href="{% url 'users:student_exam_report_card' %}" class="bs-student-btn flex flex-col justify-between p-5 rounded-xl shadow transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-file-alt text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Report Card</h2>
+          <p class="text-sm opacity-90 leading-tight">View a breakdown of your GPA, grades, and scores.</p>
+        </div>
+      </div>
+      <div class="text-xs opacity-90 mt-auto">All exam results for the academic year.</div>
+    </a>
+
+    <!-- 🧾 Report Card (PDF) -->
+    <a href="{% url 'users:exam_report_card_pdf' %}" class="bs-student-btn flex flex-col justify-between p-5 rounded-xl shadow transition hover:shadow-md min-h-[180px]">
+      <div class="flex items-center gap-3 mb-4">
+        <i class="fas fa-download text-2xl"></i>
+        <div>
+          <h2 class="font-bold text-lg">Download Report Card</h2>
+          <p class="text-sm opacity-90 leading-tight">Get your academic report in PDF format.</p>
+        </div>
+      </div>
+      <div class="text-xs opacity-90 mt-auto">Printable version of your academic year summary.</div>
+    </a>
+
+  </div>
+</div>
+
+
+<!-- 🧠 Performance and Subject Key Section -->
+<div class="mt-10">
+  <h2 class="text-2xl font-bold mb-4 text-gray-800">Academic Summary</h2>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    
+    <!-- 📈 Performance Chart Card -->
     <div class="bg-white p-6 rounded-2xl shadow shadow-blue-100">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">Performance Overview</h3>
+      {% if exam_scores and exam_labels %}
         <canvas id="performanceChart" height="100"></canvas>
+      {% else %}
+        <div class="bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-lg px-4 py-3 text-sm">
+          No performance data available yet. Please check back after exams are graded.
+        </div>
+      {% endif %}
     </div>
 
-    <!-- 🔑 Subject Key -->
-<div class="mt-6">
-    <h3 class="text-lg font-semibold mb-2">Subject Key</h3>
-    <ul class="bg-white rounded-lg shadow divide-y divide-gray-200">
-        {% for code, name in subject_code_name_map.items %}
-            <li class="p-2"><span class="font-mono text-blue-700">{{ code }}</span> = {{ name }}</li>
-        {% empty %}
-            <li class="p-2 text-gray-400">No subjects found.</li>
-        {% endfor %}
-    </ul>
+    <!-- 📘 Subject Key Card -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h3 class="text-lg font-semibold mb-4 text-gray-800">Subject Key</h3>
+      {% if subject_code_name_map %}
+        <ul class="divide-y divide-gray-200">
+          {% for code, name in subject_code_name_map.items %}
+            <li class="py-2 text-sm"><span class="font-mono text-blue-700">{{ code }}</span> = {{ name }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="text-sm text-gray-500 bg-gray-50 p-4 rounded-md border border-gray-200">
+          No subjects found.
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
 </div>
 
-</div>
 {% endblock %}
+
+
+
+
+
+
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -73,6 +231,7 @@
     animateCounter("scoreCounter", {{ average_score|default:0 }});
     animateCounter("subjectCounter", {{ subjects_count|default:0 }});
 
+    {% if exam_scores and exam_labels %}
     const ctx = document.getElementById('performanceChart').getContext('2d');
     const codeNameMap = {{ subject_code_name_map|safe }};
 
@@ -111,6 +270,6 @@
             }
         }
     });
+    {% endif %}
 </script>
-
 {% endblock %}

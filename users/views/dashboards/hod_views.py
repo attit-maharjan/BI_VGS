@@ -1,10 +1,10 @@
+# users/views/dashboards/hod_views.py
 """
-users > views > dashboards > hod_views.py
-
-Contains views accessible to HODs (Head of Departments).
+Views for Head of Department (HOD) dashboards and related student data.
+Includes role-restricted access and structured subject/student insights.
 """
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, get_object_or_404
 
 # Models
@@ -25,38 +25,52 @@ from users.services.context.v2_student_exam_performance_context import build_stu
 from users.services.context.v2_1_student_subject_comments_context import build_student_subject_comments_context
 from users.services.context.v2_student_teacher_contact_context import build_student_teacher_contact_context
 from users.services.student_dashboard_service import get_student_exam_schedule
+from users.services.teacher_based_services.student_performance_chart_service import get_chart_data_list_for_teacher
 
-# =====================================================
-# 🧑‍🏫 HOD: Dashboard
-# =====================================================
+# Role verification
+
+def is_hod(user):
+    return user.is_authenticated and hasattr(user, "teacher") and user.teacher.teacher_role == "HOD"
+
+# -------------------------
+# HOD DASHBOARD
+# -------------------------
+
 @login_required
+@user_passes_test(is_hod)
 def hod_dashboard(request):
     return render(request, 'dashboards/hod_teacher/hod_teacher_dashboard.html')
 
 
-# =====================================================
-# 📊 HOD: Subject Performance View
-# =====================================================
+# -------------------------
+# Subject Performance Summary
+# -------------------------
+
 @login_required
+@user_passes_test(is_hod)
 def hod_view_subject_performance(request):
     teacher = request.user.teacher
     context = get_subject_performance_context(teacher)
     return render(request, "dashboards/hod_teacher/hod_view_subject_performance.html", context)
 
 
-# =====================================================
-# 🎓 HOD: Department Student List View
-# =====================================================
+# -------------------------
+# List of Department Students
+# -------------------------
+
 @login_required
+@user_passes_test(is_hod)
 def hod_view_student_view(request):
     context = get_student_card_context_for_teacher(request)
     return render(request, "dashboards/hod_teacher/hod_view_student.html", context)
 
 
-# =====================================================
-# 🧠 HOD: Student Hub View
-# =====================================================
+# -------------------------
+# Full Student Hub View
+# -------------------------
+
 @login_required
+@user_passes_test(is_hod)
 def hod_view_studenthub_dashboard(request, student_id):
     teacher = request.user.teacher
     student = get_object_or_404(Student, id=student_id)
@@ -76,9 +90,9 @@ def hod_view_studenthub_dashboard(request, student_id):
     return render(request, "dashboards/hod_teacher/hod_view_studenthub_dashboard.html", context)
 
 
-# =====================================================
-# 📘 HOD: Student Subviews
-# =====================================================
+# -------------------------
+# Role Validation for Access
+# -------------------------
 
 def verify_hod_access(user, student):
     teacher = getattr(user, "teacher", None)
@@ -92,7 +106,12 @@ def verify_hod_access(user, student):
     ).exists()
 
 
+# -------------------------
+# Student Subviews
+# -------------------------
+
 @login_required
+@user_passes_test(is_hod)
 def hod_student_subjects_view(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     if not verify_hod_access(request.user, student):
@@ -102,6 +121,7 @@ def hod_student_subjects_view(request, student_id):
 
 
 @login_required
+@user_passes_test(is_hod)
 def hod_exam_results_view(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     if not verify_hod_access(request.user, student):
@@ -113,6 +133,7 @@ def hod_exam_results_view(request, student_id):
 
 
 @login_required
+@user_passes_test(is_hod)
 def hod_exam_timetable_view(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     if not verify_hod_access(request.user, student):
@@ -123,6 +144,7 @@ def hod_exam_timetable_view(request, student_id):
 
 
 @login_required
+@user_passes_test(is_hod)
 def hod_grade_insights_view(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     if not verify_hod_access(request.user, student):
@@ -132,6 +154,7 @@ def hod_grade_insights_view(request, student_id):
 
 
 @login_required
+@user_passes_test(is_hod)
 def hod_report_card_view(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     if not verify_hod_access(request.user, student):
@@ -141,6 +164,7 @@ def hod_report_card_view(request, student_id):
 
 
 @login_required
+@user_passes_test(is_hod)
 def hod_printable_report_card(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     if not verify_hod_access(request.user, student):
@@ -150,6 +174,7 @@ def hod_printable_report_card(request, student_id):
 
 
 @login_required
+@user_passes_test(is_hod)
 def hod_performance_view(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     if not verify_hod_access(request.user, student):
@@ -159,6 +184,7 @@ def hod_performance_view(request, student_id):
 
 
 @login_required
+@user_passes_test(is_hod)
 def hod_subject_comments_view(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     if not verify_hod_access(request.user, student):
@@ -168,6 +194,7 @@ def hod_subject_comments_view(request, student_id):
 
 
 @login_required
+@user_passes_test(is_hod)
 def hod_contact_teachers_view(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     if not verify_hod_access(request.user, student):
@@ -176,19 +203,9 @@ def hod_contact_teachers_view(request, student_id):
     return render(request, "dashboards/hod_teacher/hod_view_contacts.html", context)
 
 
-    
-    
-    
-# users/views/dashboards/hod_views.py
-
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render
-from users.services.teacher_based_services.student_performance_chart_service import get_chart_data_list_for_teacher
-
-
-def is_hod(user):
-    return user.is_authenticated and hasattr(user, "teacher") and user.teacher.teacher_role == "HOD"
-
+# -------------------------
+# Subject Performance Charts (HOD)
+# -------------------------
 
 @login_required
 @user_passes_test(is_hod)

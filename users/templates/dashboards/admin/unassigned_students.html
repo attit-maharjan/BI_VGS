@@ -1,0 +1,83 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load shared_filters %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <!-- 👤 Admin Header for Unassigned Students -->
+  <div class="p-6 rounded-xl shadow-sm bs-header-gradient-admin mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl">
+        <i class="fas fa-user-times text-white"></i>
+      </div>
+
+      <div>
+        <h1 class="text-2xl font-bold leading-tight">Unassigned Students</h1>
+        <p class="text-sm font-medium">By Role: <span class="uppercase font-semibold">ADMIN</span></p>
+      </div>
+    </div>
+
+    <p class="text-sm max-w-xl leading-relaxed text-white/90">
+      Below is a list of students who are not assigned to any class group. Assign them to class groups or remove if inactive.
+    </p>
+  </div>
+
+  <!-- ✅ Flash Messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="mb-6 p-4 rounded-md text-sm
+        {% if message.tags == 'success' %}bg-green-100 text-green-800
+        {% elif message.tags == 'error' %}bg-red-100 text-red-800
+        {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {% if students %}
+  <div class="overflow-x-auto bg-white rounded-xl shadow">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr class="text-left text-sm font-semibold text-gray-700">
+          <th class="px-6 py-3">Profile</th>
+          <th class="px-6 py-3">Student ID</th>
+          <th class="px-6 py-3">Full Name</th>
+          <th class="px-6 py-3">Email</th>
+          <th class="px-6 py-3">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-100 text-sm">
+        {% for student in students %}
+        <tr>
+          <td class="px-6 py-4">
+            {% if student.user.profile_image %}
+              <img src="{{ student.user.profile_image.url }}" alt="Profile Image" class="w-10 h-10 rounded-full object-cover">
+            {% else %}
+              <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-xs font-bold uppercase text-white">
+                {{ student.user.first_name|first }}{{ student.user.last_name|first }}
+              </div>
+            {% endif %}
+          </td>
+          <td class="px-6 py-4">{{ student.student_id }}</td>
+          <td class="px-6 py-4">{{ student.user.get_full_name }}</td>
+          <td class="px-6 py-4">{{ student.user.email }}</td>
+          <td class="px-6 py-4">
+            <form method="post"
+                  action="{% url 'users:delete_unassigned_student' student.student_id %}"
+                  onsubmit="return confirm('Are you sure you want to delete {{ student.user.get_full_name }}? This action cannot be undone.');">
+              {% csrf_token %}
+              <button type="submit" class="text-red-600 hover:text-red-800 font-medium">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-sm text-gray-500 mt-4">🎉 All students are currently assigned to class groups.</p>
+  {% endif %}
+</div>
+{% endblock %}

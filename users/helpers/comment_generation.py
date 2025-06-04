@@ -2,121 +2,146 @@
 # 📄 Intelligent Feedback Generator
 # Description: Produces subject-wise exam feedback based on peer comparison
 # +++++++++++++++++++++++++++++++++++++++++++++
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# 📄 Intelligent Feedback Generator — Student-Focused Psychological Commentary
+#
+# Description:
+# This module generates subject-specific performance comments intended 
+# exclusively for students. The comments are tone-aware, psychologically 
+# calibrated, and motivational in nature. They are designed to:
+#
+# - Encourage self-reflection and personal growth
+# - Deliver feedback in a supportive, empowering tone
+# - Reduce performance anxiety by contextualizing peer comparison
+#
+# 🔄 DIFFERENCE FROM TEACHER / PARENT COMMENTS:
+# These comments are distinct from those shown to teachers or parents.
+# While teacher and parent comments may emphasize diagnostic insight,
+# comparative ranking, or academic intervention, these student comments
+# prioritize emotional intelligence, intrinsic motivation, and resilience.
+#
+# The goal is to help students understand their performance while maintaining
+# self-confidence and a growth mindset — not to evaluate or critique from
+# an external perspective.
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+import random
+
 
 def generate_intelligent_comment(subject, exam_title, grade, score, class_scores_same_grade):
     """
-    Generates an intelligent feedback comment for a given exam result.
-
-    Args:
-        subject (str): Name of the subject.
-        exam_title (str): Title of the exam.
-        grade (str): Grade letter achieved (A-F).
-        score (float): Student's score.
-        class_scores_same_grade (List[float]): Scores of all students with the same grade in that exam.
-
-    Returns:
-        str: Smart feedback message.
+    Generates a subject-specific, tone-aware comment based on score, grade, and peer performance.
     """
 
-    # 🧪 Guard clause: Handle missing or invalid input
     if not grade or score is None:
         return "No grade or score available to generate feedback."
 
-    # 🧮 Calculate average score among students with the same grade
-    avg_grade_score = sum(class_scores_same_grade) / len(class_scores_same_grade) if class_scores_same_grade else 0
-    delta = score - avg_grade_score  # Difference between student score and peer average
+    # Remove the student's own score from peer list
+    peer_scores = [s for s in class_scores_same_grade if s != score]
+    avg_grade_score = sum(peer_scores) / len(peer_scores) if peer_scores else score
+    delta = round(score - avg_grade_score, 1)
+    proximity = round(10 - (score % 10), 2) if score < 100 else 0.00
 
-    # 🗒️ Start building comment with basic performance summary
-    comment = f"You scored {round(score, 1)} in {subject}, which falls under grade {grade}. "
-
-    # 🔠 Normalize to main grade band (e.g., A-, A+ → A)
-    band = grade[0]
-
-    # +++++++++++++++++++++++++++++
-    # 🏆 Grade Band: A
-    # +++++++++++++++++++++++++++++
-    if band == "A":
-        comment += f"This is the highest grade band. The average in this group is {avg_grade_score:.1f}. "
-        if delta > 2:
-            comment += "You're outperforming your peers — excellent work! 🏆"
-        elif delta < -2:
-            comment += "You're slightly below average for an A — you can dominate with a little push! 🔥"
-        else:
-            comment += "You're right around the average — still a top performer! ✨"
-
-    # +++++++++++++++++++++++++++++
-    # 📘 Grade Band: B
-    # +++++++++++++++++++++++++++++
-    elif band == "B":
-        comment += f"The average among B-grade students is {avg_grade_score:.1f}. "
-        if delta > 2:
-            comment += "You're above your group — aim for an A next time! 🚀"
-        elif delta < -2:
-            comment += "You're slightly below your peers — keep pushing, an A is within reach!"
-        else:
-            comment += "You're on par with your group — solid performance. 📘"
-
-    # +++++++++++++++++++++++++++++
-    # ⚖️ Grade Band: C
-    # +++++++++++++++++++++++++++++
-    elif band == "C":
-        comment += f"Your group's average is {avg_grade_score:.1f}. "
-        if delta > 2:
-            comment += "You're near the top of your group — aim for a B! ✊"
-        elif delta < -2:
-            comment += "You're lagging in this group — focus on key improvement areas. 🧠"
-        else:
-            comment += "You're right in the middle — stay consistent and improve!"
-
-    # +++++++++++++++++++++++++++++
-    # ⚠️ Grade Band: D
-    # +++++++++++++++++++++++++++++
-    elif band == "D":
-        comment += f"This grade band averages {avg_grade_score:.1f}. "
-        if delta > 2:
-            comment += "You're slightly above average here — keep striving to exit this band."
-        else:
-            comment += "You're at risk — consider extra support and focused study. 💡"
-
-    # +++++++++++++++++++++++++++++
-    # 🚨 Grade Band: E
-    # +++++++++++++++++++++++++++++
-    elif band == "E":
-        comment += "This is a very low grade band. Immediate support and revision is needed. 🙏"
-
-    # +++++++++++++++++++++++++++++
-    # ❌ Grade Band: F
-    # +++++++++++++++++++++++++++++
-    elif band == "F":
-        comment += "You received a failing grade. Seek teacher guidance and commit to a study plan. 📚"
-
-    # +++++++++++++++++++++++++++++
-    # 🤷 Fallback for unknown grades
-    # +++++++++++++++++++++++++++++
+    # Determine the overall tone of the comment
+    if score >= 90:
+        tone = "celebratory"
+    elif delta > 10:
+        tone = "encouraging"
+    elif -3 <= delta <= 3:
+        tone = "supportive"
+    elif delta < -10 and score < 60:
+        tone = "warning"
+    elif avg_grade_score < 55 and 50 <= score <= 70:
+        tone = "supportive"
+    elif score < 50:
+        tone = "warning"
     else:
-        comment += "Grade not recognized — please consult your teacher."
+        tone = "direct"
 
-    return comment
+    tone_openers = {
+        "encouraging": [
+            f"You're making strong progress in {subject}.",
+            f"Good effort in {subject} — you're heading in the right direction.",
+            f"{subject} performance is improving steadily."
+        ],
+        "direct": [
+            f"You scored {score:.1f} in {subject}.",
+            f"Your performance in {subject} was recorded at {score:.1f}.",
+            f"Your result in {subject}: {score:.1f}."
+        ],
+        "supportive": [
+            f"{subject} appears challenging, but your effort is noted.",
+            f"This was a demanding {subject} exam for many.",
+            f"Stay consistent in {subject} — improvement follows persistence."
+        ],
+        "warning": [
+            f"This result in {subject} signals the need for focused support.",
+            f"{subject} requires more attention moving forward.",
+            f"You may benefit from extra help in {subject} to catch up."
+        ],
+        "celebratory": [
+            f"Excellent achievement in {subject} — you're among the top performers!",
+            f"Outstanding work in {subject} — this is top-tier performance.",
+            f"Superb result in {subject}! You've set a high standard."
+        ]
+    }
+
+    opening = random.choice(tone_openers[tone])
+
+    # Add context based on class performance comparison
+    if peer_scores:
+        if avg_grade_score < 55:
+            context = f" The class average was {avg_grade_score:.1f}, suggesting this was a tough exam."
+        elif delta > 10:
+            context = f" You outperformed your peers by {abs(delta):.1f} points."
+        elif 3 <= delta <= 10:
+            context = f" You scored above the class average of {avg_grade_score:.1f}."
+        elif -3 < delta < 3:
+            context = f" Your score of {score:.1f} was close to the class average ({avg_grade_score:.1f})."
+        elif -10 <= delta <= -3:
+            context = f" You were {abs(delta):.1f} points below the class average."
+        else:
+            context = f" You were significantly below the class average by {abs(delta):.1f} points."
+    else:
+        if grade in ["F", "E", "D"]:
+            context = f" This result in {subject} stands out individually — focus on personal improvement."
+        elif grade == "C":
+            context = f" Your effort in {subject} is noted even without a peer benchmark."
+        else:
+            context = f" In {subject}, your performance is strong — though no direct peer comparison was available."
+
+    grade_hint = ""
+    if 48 <= score <= 89 and proximity <= 2:
+        grade_hint = f" You're just {proximity:.2f} mark(s) from the next grade."
+    elif score < 50:
+        grade_hint = " With effort, you can move out of the failing range."
+
+    closers = random.sample([
+        "Keep going.",
+        "Progress is possible.",
+        "You're improving step by step.",
+        "Let’s aim higher next time.",
+        "Believe in your growth.",
+        "You're on a good path — keep refining it.",
+        "Consistency will raise your performance."
+    ], k=3)
+
+    return f"{opening}{context}{grade_hint} {random.choice(closers)}"
 
 
 def generate_subject_comments(student, marks):
     """
     Generates subject-specific comments based on performance in the student’s exams.
-
-    Args:
-        student (User): The student object.
-        marks (QuerySet): List of StudentMark objects containing exam and grade details.
-
-    Returns:
-        List[dict]: A list of dictionaries with subject-wise exam feedback.
     """
+
     comments = []
     for mark in marks:
         if not mark.grade:
             continue
 
-        # Get peer scores in same grade
         peer_scores = mark.exam.studentmark_set.filter(grade=mark.grade).values_list("score", flat=True)
+
         comment = generate_intelligent_comment(
             subject=mark.exam.subject.name,
             exam_title=mark.exam.title,

@@ -418,3 +418,29 @@ def performance_label_to_color(label):
         "Total Students": "#334155", # Tailwind slate-800
     }
     return color_map.get(label, "#cbd5e1")  # fallback: slate-300
+
+@register.filter
+def apply_input_style(field):
+    """
+    Applies Tailwind input styling to a form field.
+    Use like: {{ form.field_name|apply_input_style }}
+    """
+    return field.as_widget(attrs={
+        "class": "border border-gray-300 rounded-lg px-4 py-2 w-full text-sm focus:outline-none focus:ring focus:border-blue-300"
+    })
+
+
+@register.filter
+def append_if_error(base_class, field):
+    """
+    Appends 'border-red-500' to a Tailwind class string if the field has validation errors.
+    Usage: {{ form.field|add_class:"..."|append_if_error:form.field }}
+    """
+    if hasattr(field, 'errors') and field.errors:
+        return f"{base_class} border-red-500"
+    return base_class
+
+
+@register.filter
+def field_in(field_name, names):
+    return field_name in names.split(',')

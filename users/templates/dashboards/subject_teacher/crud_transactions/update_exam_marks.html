@@ -1,58 +1,90 @@
 {% extends "base/base_dashboard.html" %}
 {% load static %}
+{% load widget_tweaks %}
 {% load shared_filters %}
 
 {% block content %}
-<div class="max-w-6xl mx-auto px-4 py-8">
+<div class="px-4 py-6">
 
-  <!-- 📝 Exam Information Card -->
-  {% include "dashboards/subject_teacher/crud_transactions/_exam_info_card.html" %}
+  <!-- 📘 Exam Info -->
+  {% include "dashboards/subject_teacher/crud_transactions/_exam_info_card.html" with exam=exam %}
 
-  <!-- 🔧 Update Marks Form -->
-  <form method="POST" novalidate>
-    {% csrf_token %}
+  <!-- ✅ Flash messages -->
+  {% if messages %}
+    <div class="mt-4">
+      {% for message in messages %}
+        <div class="mb-2 p-3 rounded-lg text-sm {% if message.tags == 'success' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
 
-    {% if formset.non_form_errors %}
-      <div class="bg-red-100 text-red-700 text-sm p-3 rounded mb-4">
-        {{ formset.non_form_errors }}
-      </div>
-    {% endif %}
+  <!-- 📝 Form -->
+  <!-- 📝 Form -->
+<form method="post" novalidate class="mt-6">
+  {% csrf_token %}
+  {{ formset.management_form }}  <!-- ✅ Required for formset processing -->
 
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-300 shadow border border-gray-200 rounded-lg bg-white text-sm">
-        <thead class="bg-emerald-600 text-white">
-          <tr>
-            <th class="text-left px-4 py-3">Student</th>
-            <th class="text-left px-4 py-3">Current Score</th>
-            <th class="text-left px-4 py-3">Updated Score</th>
+  <!-- Optional global formset errors -->
+  {% if formset.non_form_errors %}
+    <div class="mb-4 text-red-700 text-sm">
+      <ul class="list-disc pl-5">
+        {% for error in formset.non_form_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <div class="overflow-x-auto rounded-xl border border-gray-100 shadow bg-white p-4">
+    <table class="min-w-full divide-y divide-gray-200 text-sm">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left font-medium text-gray-500">Student</th>
+          <th class="px-6 py-3 text-left font-medium text-gray-500">Current Score</th>
+          <th class="px-6 py-3 text-left font-medium text-gray-500">New Score</th>
+          <th class="px-6 py-3 text-left font-medium text-gray-500">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for form in formset %}
+          <tr class="{% if form.errors %}bg-red-50{% endif %}">
+            <td class="px-6 py-4 text-gray-800">
+              {% if form.instance and form.instance.student and form.instance.student.user %}
+                {{ form.instance.student.user.get_full_name }}
+              {% else %}
+                <span class="text-red-600 text-xs italic">Missing student info</span>
+              {% endif %}
+            </td>
+            <td class="px-6 py-4 text-gray-600">
+              {{ form.instance.score|floatformat:2 }}
+            </td>
+            <td class="px-6 py-4">
+              {{ form.score|apply_input_style }}
+              {{ form.id }}
+              {% if form.score.errors %}
+                <div class="mt-1 text-xs text-red-600">
+                  {{ form.score.errors.0 }}
+                </div>
+              {% endif %}
+            </td>
+            <td class="px-6 py-4">
+              <span class="text-gray-400 text-xs italic">Batch update only</span>
+            </td>
           </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-          {% for form in formset %}
-            <tr class="hover:bg-emerald-50">
-              <td class="px-4 py-3 font-medium">
-                {{ form.instance.student.get_full_name }}
-              </td>
-              <td class="px-4 py-3 text-gray-600">
-                {{ form.instance.score|default:"—" }}
-              </td>
-              <td class="px-4 py-3">
-                {{ form.score.errors }}
-                {{ form.score }}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-    <!-- ✅ Submit Button -->
-    <div class="mt-6 text-right">
-      <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded shadow">
-        Update Marks
-      </button>
-    </div>
-  </form>
+  <!-- 📤 Submit all -->
+  <div class="mt-6 text-right">
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm shadow-sm transition duration-200">
+      Update All Marks
+    </button>
+  </div>
+</form>
 
 </div>
 {% endblock %}

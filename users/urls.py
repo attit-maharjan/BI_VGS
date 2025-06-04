@@ -71,6 +71,10 @@ urlpatterns = [
     # 🧑‍💼 Admin Dashboard
     # ===============================
     path('dashboard/admin/', admin_views.admin_dashboard, name='admin_dashboard'),
+    path("dashboard/admin/register/", admin_views.admin_register_user_view, name="admin_register_user"),
+    path("dashboard/admin/unassigned-students/", admin_views.unassigned_students_view, name="admin_unassigned_students"),
+    path("dashboard/admin/unassigned-students/delete/<str:student_id>/", admin_views.delete_unassigned_student_view, name="delete_unassigned_student"),
+    path("dashboard/admin/update-school-settings/", admin_views.admin_update_school_settings_view, name="admin_update_school_settings"),
     
     
 
@@ -80,12 +84,14 @@ urlpatterns = [
     path('dashboard/student/', student_views.student_dashboard, name='student_dashboard'),
     path('dashboard/student/subjects/', student_views.student_subjects_view, name='student_subjects'),
     path('dashboard/student/exams/', student_views.student_exam_schedule_view, name='student_exam_schedule'), 
-    path("results/summary/", student_views.exam_summary_view, name="student_exam_summary"),         # 📄 Table: Subject, Score, Grade
-    path("results/performance/", student_views.exam_performance_view, name="student_exam_performance"),  # 📊 Charts: Score vs Avg, Trend Line
-    path("results/insights/", student_views.exam_insights_view, name="student_exam_insights"),           # 📈 Grade Insight Bars
-    path("results/report-card/", student_views.exam_report_card_view, name="student_exam_report_card"),  # 🧾 Printable Report Card
-    path("results/comments/", student_views.exam_comments_view, name="student_exam_comments"),           # 💬 Smart Subject Comments
-    path("student/report-card/pdf/", student_views.exam_report_card_pdf_view, name="exam_report_card_pdf"),
+    path("dashboard/student/results/summary/", student_views.exam_summary_view, name="student_exam_summary"),         # 📄 Table: Subject, Score, Grade
+    path("dashboard/student/results/performance/", student_views.exam_performance_view, name="student_exam_performance"),  # 📊 Charts: Score vs Avg, Trend Line
+    path("dashboard/student/results/insights/", student_views.exam_insights_view, name="student_exam_insights"),           # 📈 Grade Insight Bars
+    path("dashboard/student/results/report-card/", student_views.exam_report_card_view, name="student_exam_report_card"),  # 🧾 Printable Report Card
+    path("dashboard/student/results/comments/", student_views.exam_comments_view, name="student_exam_comments"),           # 💬 Smart Subject Comments
+    path("dashboard/student/report-card/pdf/", student_views.exam_report_card_pdf_view, name="exam_report_card_pdf"),
+    # student not enrolled completely:
+    path('not-enrolled/', student_views.student_not_enrolled_view, name='student_not_enrolled'),
 
 
 
@@ -160,6 +166,8 @@ urlpatterns = [
     # 🧑‍🏫 Subject Teacher CRUD Views
     # ===============================
     path("dashboard/subject-teacher/exam/<int:exam_id>/update-marks/", subject_teacher_views.update_exam_marks_view, name="update_exam_marks"),
+    path('dashboard/subject-teacher/exams/select/', subject_teacher_views.select_exam_for_mark_update_view, name='select_exam_for_mark_update'),
+
         
     # ✅ 2. SUBJECT TEACHER EXTENSIONS
     # ----------------------------------------------------

@@ -1,0 +1,45 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load shared_filters %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <!-- 🎯 Role-Aware Heading Block -->
+  <div class="mb-6 p-5 rounded-2xl shadow-sm border border-gray-100 bg-opacity-10 {% role_button_class %}">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <h2 class="text-2xl font-semibold tracking-tight text-white">
+        <i class="fas fa-edit mr-2"></i> Select Exam to Update Marks
+      </h2>
+      <p class="text-sm text-white text-opacity-80 sm:mt-0 mt-2">
+        Choose an exam below to enter or update student marks
+      </p>
+    </div>
+  </div>
+
+  {% if exams %}
+    <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
+      <ul class="divide-y divide-gray-200 dark:divide-gray-600">
+        {% for exam in exams %}
+          <li class="py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition rounded-lg px-2">
+            <a href="{% url 'users:update_exam_marks' exam.id %}" class="block text-blue-700 dark:text-blue-400 font-medium hover:underline">
+              <span class="text-lg">{{ exam.title }}</span>
+              <div class="text-sm text-gray-500 dark:text-gray-400">
+                {{ exam.class_group.name }} • {{ exam.subject.name }}
+              </div>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <div class="text-center py-12">
+      <p class="text-sm text-red-600 dark:text-red-400">
+        <i class="fas fa-exclamation-circle mr-2"></i> No exams found for your assigned subject(s).
+      </p>
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

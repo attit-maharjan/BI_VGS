@@ -1,0 +1,33 @@
+{% extends "base/base_dashboard.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load shared_filters %}
+
+{% block title %}Student Not Enrolled | {{ school_settings.school_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto text-center mt-20 bg-white shadow rounded-xl p-8">
+
+  <i class="fas fa-user-times text-6xl text-red-500 mb-4"></i>
+  <h1 class="text-2xl font-bold text-gray-800 mb-2">⚠️ Problem with Student Record</h1>
+
+  <p class="text-gray-600 text-sm mb-4">
+    The student you are trying to view is either:
+  </p>
+
+  <ul class="list-disc list-inside text-left text-sm text-gray-700 mb-6">
+    <li>Not yet enrolled in any <strong>Class Group</strong></li>
+    <li>Has not been assigned to any <strong>Exam</strong></li>
+    <li>Or their profile is incomplete</li>
+  </ul>
+
+  <p class="text-gray-600 mb-6">
+    Kindly contact the system administrator for verification or wait for proper registration to be completed.
+  </p>
+
+  <a href="{% url 'users:role_dashboard' %}" class="bs-btn-primary inline-block mt-2">
+    <i class="fas fa-arrow-left mr-2"></i> Go Back to Dashboard
+  </a>
+
+</div>
+{% endblock %}

@@ -8,10 +8,28 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">📄 My Exam Summary</h1>
-        <p class="mt-2 text-sm text-gray-600">An overview of your exam performance for {{ summary.academic_year }} in {{ summary.class_group }}.</p>
+    <!-- 🧾 Exam Summary Header -->
+    <div class="p-6 rounded-xl shadow-sm bs-header-gradient-student mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-2xl">
+        <i class="fas fa-file-alt text-white"></i>
+        </div>
+
+        <div>
+        <h1 class="text-2xl font-bold leading-tight">My Exam Summary</h1>
+        <p class="text-sm font-medium">For Role: <span class="uppercase font-semibold">STUDENT</span></p>
+        </div>
     </div>
+
+    <p class="text-sm max-w-xl leading-relaxed text-white/90">
+        A complete list of your exam performances this academic year. Review your marks, grades, and track your consistency across all subjects.
+        <br />
+        <span class="block mt-1 font-medium">
+        Academic Year: <strong>{{ summary.academic_year }}</strong> | Class Group: <strong>{{ summary.class_group }}</strong>
+        </span>
+    </p>
+    </div>
+
 
     {% if summary.exams %}
     <div class="overflow-x-auto bg-white shadow-lg rounded-xl">

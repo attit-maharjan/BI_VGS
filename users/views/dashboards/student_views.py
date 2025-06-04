@@ -1,7 +1,18 @@
-# Path: BIVGS > users app > views/dashboards/student_views.py
+# *******************************
+# users > views > dashboards > student_views.py
+# *******************************
 
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.template.loader import get_template
+from django.http import HttpResponse
+from django.contrib import messages
+
+
+
+from xhtml2pdf import pisa
+
+from users.helpers.generate_chart_images import generate_grade_distribution_charts
 from users.services.student_dashboard_service import (
     get_student_dashboard_summary,
     get_student_subjects,
@@ -15,15 +26,12 @@ from users.services.context.student_exam_context_service import (
     get_exam_comments_context,
 )
 
+from enrollments.models import ClassGroupStudentEnrollment
 
-# views/dashboards/student_views.py
-from django.template.loader import get_template
-from django.http import HttpResponse
-from xhtml2pdf import pisa
-from users.helpers.generate_chart_images import generate_grade_distribution_charts
-# ============================================================
-# 📚 Student Dashboard View
-# ============================================================
+
+# ===============================================
+# 📊 DASHBOARD + SUBJECTS + TIMETABLE
+# ===============================================
 
 @login_required
 def student_dashboard(request):
@@ -32,20 +40,12 @@ def student_dashboard(request):
     return render(request, 'dashboards/student/student_dashboard.html', context)
 
 
-# ============================================================
-# 📚 Student Subjects View
-# ============================================================
-
 @login_required
 def student_subjects_view(request):
     student = request.user.student
     context = get_student_subjects(student)
     return render(request, 'dashboards/student/student_subjects.html', context)
 
-
-# ============================================================
-# 🧪 Student Exam Schedule View
-# ============================================================
 
 @login_required
 def student_exam_schedule_view(request):
@@ -54,9 +54,9 @@ def student_exam_schedule_view(request):
     return render(request, 'dashboards/student/student_exam_schedule.html', context)
 
 
-# ============================================================
-# 📄 Summary of All Exams
-# ============================================================
+# ===============================================
+# 🧪 EXAM DATA VIEWS
+# ===============================================
 
 @login_required
 def exam_summary_view(request):
@@ -65,20 +65,12 @@ def exam_summary_view(request):
     return render(request, 'dashboards/student/exam_summary.html', context)
 
 
-# ============================================================
-# 📊 Performance Chart View
-# ============================================================
-
 @login_required
 def exam_performance_view(request):
     student = request.user.student
     context = get_exam_performance_context(student)
     return render(request, 'dashboards/student/exam_performance.html', context)
 
-
-# ============================================================
-# 📈 Grade Insights View
-# ============================================================
 
 @login_required
 def exam_insights_view(request):
@@ -87,21 +79,28 @@ def exam_insights_view(request):
     return render(request, 'dashboards/student/exam_insights.html', context)
 
 
-# ============================================================
-# 🧾 Report Card View
-# ============================================================
 
 @login_required
 def exam_report_card_view(request):
     student = request.user.student
+
+    # ❗ Prevent crash when student has no class group enrollment
+    try:
+        ClassGroupStudentEnrollment.objects.get(student=student)
+    except ClassGroupStudentEnrollment.DoesNotExist:
+        messages.error(request, "You are not yet assigned to a class group. Report card unavailable.")
+        return redirect("users:student_dashboard")
+
     context = get_exam_report_card_context(student)
     return render(request, 'dashboards/student/exam_report_card.html', context)
 
 
-# ============================================================
-# 💬 Subject Comments View
-# ============================================================
 
+
+
+# =============================
+# 📘 View: Student Subject Comments
+# =============================
 @login_required
 def exam_comments_view(request):
     student = request.user.student
@@ -111,18 +110,22 @@ def exam_comments_view(request):
 
 
 
-# ============================================================
-# 📄 PDF Report Card Download View
-# ============================================================
-
-
+# ===============================================
+# 🧾 PDF EXPORT: REPORT CARD
+# ===============================================
 
 @login_required
 def exam_report_card_pdf_view(request):
     student = request.user.student
-    context = get_exam_report_card_context(student)
 
-    # Inject chart image base64
+    # Defensive check: Ensure the student has a class group enrollment
+    try:
+        ClassGroupStudentEnrollment.objects.get(student=student)
+    except ClassGroupStudentEnrollment.DoesNotExist:
+        messages.error(request, "You are not yet assigned to any class group. Please contact the administrator.")
+        return redirect("users:student_dashboard")
+
+    context = get_exam_report_card_context(student)
     context["report_chart_images"] = generate_grade_distribution_charts(context["report_card"])
     context["user"] = request.user
 
@@ -135,5 +138,15 @@ def exam_report_card_pdf_view(request):
     pisa_status = pisa.CreatePDF(html, dest=response)
     if pisa_status.err:
         return HttpResponse("PDF generation failed", status=500)
+
     return response
 
+
+
+# -------------------------------------
+# 🚫 Not Enrolled View (Shared Error Page)
+# -------------------------------------
+
+@login_required
+def student_not_enrolled_view(request):
+    return render(request, "dashboards/student/not_enrolled/student_not_enrolled.html")
