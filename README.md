@@ -96,10 +96,10 @@ Each role gets a unique dashboard and access level tailored to their responsibil
 
 Setup instructions for local development and deployment
 1.	Extract the Zip Archive
-•	Unzip BIVGS.zip to get the main project folder named BIVGS.
+ •	Unzip BIVGS.zip to get the main project folder named BIVGS.
 2.	Navigate to the Root Directory
-•	Open Command Prompt (Windows) or Terminal (Mac/Linux).
-•	Navigate into the BIVGS folder where manage.py is located.
+ •	Open Command Prompt (Windows) or Terminal (Mac/Linux).
+ •	Navigate into the BIVGS folder where manage.py is located.
 3.	Create and Activate Virtual Environment (Recommended)
 python -m venv venv
 venv\Scripts\activate  # On Windows
@@ -180,9 +180,6 @@ python manage.py shell
 •	Check Migrations:
 python manage.py makemigrations
 python manage.py migrate
-________________________________________
-📞 Support
-Development team BIVGS
 
 
 ---
