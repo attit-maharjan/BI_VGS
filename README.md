@@ -180,7 +180,8 @@ python manage.py shell
 •	Check Migrations:
 python manage.py makemigrations
 python manage.py migrate
-
+python manage.py flush
+python manage.py loaddata data_dump.json
 
 ---
 
