@@ -175,6 +175,7 @@ ________________________________________
 •	Extensibility: You can continue building features for current roles.
 ________________________________________
 🛠️ Useful Commands
+
 •	Start Django Shell:
 python manage.py shell
 •	Check Migrations:
